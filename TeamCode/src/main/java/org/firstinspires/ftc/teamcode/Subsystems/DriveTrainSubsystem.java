@@ -20,6 +20,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     private final DcMotor frontLeft;
 
     public DriveTrainSubsystem(HardwareMap hardwareMap) {
+
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         rearRight = hardwareMap.get(DcMotor.class, "rearRight");
         rearLeft = hardwareMap.get(DcMotor.class, "rearLeft");
@@ -42,6 +43,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
 
     public void moveDrivetrain(
+
             double frontRightPower,
             double rearRightPower,
             double frontLeftPower,
@@ -50,13 +52,16 @@ public class DriveTrainSubsystem extends SubsystemBase {
         rearLeft.setPower(rearLeftPower);
         frontRight.setPower(frontRightPower);
         rearRight.setPower(rearRightPower);
+
     }
 
 
     public void stopDrivetrain() {
+
         frontLeft.setPower(0);
         rearLeft.setPower(0);
         frontRight.setPower(0);
         rearRight.setPower(0);
+
     }
 }
