@@ -7,11 +7,15 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.teamcode.Subsystems.DriveTrainSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.SensorSubsystem;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+
+import java.util.List;
 
 @TeleOp
 public class TeleOPMode extends LinearOpMode {
 
     private IMU imu;
+    private int lastTagId = 0;
 
     private DriveTrainSubsystem driveTrainSubsystem;
     private SensorSubsystem sensorSubsystem;
@@ -19,38 +23,49 @@ public class TeleOPMode extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        imu = hardwareMap.get(IMU.class, "imu");
-        
-        driveTrainSubsystem = new DriveTrainSubsystem(hardwareMap);
-        sensorSubsystem = new SensorSubsystem(hardwareMap);
+        List<AprilTagDetection> detections = sensorSubsystem.getDetections();
 
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
-        waitForStart();
+        int newTagId = lastTagId;
+        for (AprilTagDetection detection : detections) {
+            if (detection.id >= 21 && detection.id <= 23) {
+                newTagId = detection.id;
+                break;
+            }
+            imu = hardwareMap.get(IMU.class, "imu");
 
-        while (opModeIsActive()) {
-            SparkFunOTOS.Pose2D pose = SensorSubsystem.getPose2d();
+            driveTrainSubsystem = new DriveTrainSubsystem(hardwareMap);
+            sensorSubsystem = new SensorSubsystem(hardwareMap);
 
-            telemetry.addData("Status", "Running");
+            telemetry.addData("Status", "Initialized");
             telemetry.update();
-            telemetry.addData("X coordinate", pose.x);
-            telemetry.addData("Y coordinate", pose.y);
-            telemetry.addData("Heading angle", pose.h);double lefty = -gamepad1.left_stick_y;
+            waitForStart();
 
-            double leftx = gamepad1.left_stick_x;
-            double rightx = gamepad1.right_stick_x;
+            while (opModeIsActive()) {
+                SparkFunOTOS.Pose2D pose = SensorSubsystem.getPose2d();
 
-            double frontRightPower = (lefty + leftx + rightx);
-            double rearRightPower = (lefty - leftx + rightx);
-            double rearLeftPower = (lefty + leftx - rightx);
-            double frontLeftPower = (lefty - leftx - rightx);
+                telemetry.addData("Status", "Running");
+                telemetry.update();
+                telemetry.addData("X coordinate", pose.x);
+                telemetry.addData("Y coordinate", pose.y);
+                telemetry.addData("Heading angle", pose.h);
+                double lefty = -gamepad1.left_stick_y;
+                telemetry.addData("Motif", sensorSubsystem.getMotif(newTagId));
 
-            driveTrainSubsystem.moveDrivetrain(
-                    frontRightPower,
-                    rearRightPower,
-                    frontLeftPower,
-                    rearLeftPower);
+                double leftx = gamepad1.left_stick_x;
+                double rightx = gamepad1.right_stick_x;
 
+                double frontRightPower = (lefty + leftx + rightx);
+                double rearRightPower = (lefty - leftx + rightx);
+                double rearLeftPower = (lefty + leftx - rightx);
+                double frontLeftPower = (lefty - leftx - rightx);
+
+                driveTrainSubsystem.moveDrivetrain(
+                        frontRightPower,
+                        rearRightPower,
+                        frontLeftPower,
+                        rearLeftPower);
+
+            }
         }
     }
 }
