@@ -43,11 +43,11 @@ public class SensorSubsystem extends SubsystemBase {
     public void startLimelight() {
         limelight.start();
     }
-    /*
+
     public List<AprilTagDetection> getDetections() {
         return aprilTagProcessor.getDetections();
     }
-/*
+
     public static void telemetryDetections(Telemetry telemetry, List<AprilTagDetection> currentDetections) {
         telemetry.addData("# AprilTags Detected", currentDetections.size());
         for (AprilTagDetection detection : currentDetections) {
@@ -62,5 +62,5 @@ public class SensorSubsystem extends SubsystemBase {
             }
         }
     }
-    */
+
 }
