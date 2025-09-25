@@ -11,9 +11,6 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 public class DriveTrainSubsystem extends SubsystemBase {
 
-    private final IMU imu;
-    private final VoltageSensor batterySensor;
-
     private final DcMotor frontRight;
     private final DcMotor rearRight;
     private final DcMotor rearLeft;
@@ -28,30 +25,29 @@ public class DriveTrainSubsystem extends SubsystemBase {
         rearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        rearRight.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        imu = hardwareMap.get(IMU.class, "imu");
-        batterySensor = hardwareMap.voltageSensor.iterator().next();
-        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                RevHubOrientationOnRobot.UsbFacingDirection.LEFT));
-        imu.initialize(parameters);
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        rearLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
     }
 
 
     public void moveDrivetrain(
-            double frontRightPower,
-            double rearRightPower,
-            double frontLeftPower,
-            double rearLeftPower) {
+            double x,
+            double y,
+            double rx) {
+
+        double frontRightPower = (y + x + rx);
+        double rearRightPower = (y - x + rx);
+        double rearLeftPower = (y + x - rx);
+        double frontLeftPower = (y - x - rx);
+
+
+
         frontLeft.setPower(frontLeftPower);
         rearLeft.setPower(rearLeftPower);
         frontRight.setPower(frontRightPower);
         rearRight.setPower(rearRightPower);
     }
-
 
     public void stopDrivetrain() {
         frontLeft.setPower(0);
