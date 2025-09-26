@@ -35,7 +35,7 @@ public class ManipulationSubsystem extends SubsystemBase {
     }
 
     public void runShooter() {
-        shootingMotor.setVelocity(30, AngleUnit.DEGREES);
+        shootingMotor.setVelocity(100, AngleUnit.DEGREES);
     }
 
     public void stopIntake() {
