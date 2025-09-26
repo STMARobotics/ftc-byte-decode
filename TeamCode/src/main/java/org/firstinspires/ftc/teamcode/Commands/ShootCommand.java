@@ -21,18 +21,23 @@ public class ShootCommand extends CommandBase {
     }
 
     @Override
+    public void initialize() {
+        hasShot = false;
+    }
+
+    @Override
     public void execute() {
-        manipulationSubsystem.runShooter(1);
+        manipulationSubsystem.runShooter();
         if (manipulationSubsystem.getShooterSpeed() >= 30 && !hasShot) {
             timer.reset();
             manipulationSubsystem.runIndexer(1);
-
+            hasShot = true;
         }
     }
 
     @Override
     public boolean isFinished() {
-        return (hasShot && timer.time() >= 5);
+        return (hasShot && timer.seconds() >= .25);
     }
 
     @Override

@@ -6,11 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
-import com.seattlesolvers.solverslib.hardware.motors.CRServoEx;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-
-import java.util.List;
 
 public class ManipulationSubsystem extends SubsystemBase {
 
@@ -37,7 +34,7 @@ public class ManipulationSubsystem extends SubsystemBase {
         indexerServo.setPower(power);
     }
 
-    public void runShooter(double power) {
+    public void runShooter() {
         shootingMotor.setVelocity(30, AngleUnit.DEGREES);
     }
 
