@@ -1,87 +1,71 @@
 package org.firstinspires.ftc.teamcode.OPmodes;
 
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.pedropathing.geometry.BezierLine;
+import com.pedropathing.geometry.Pose;
+import com.pedropathing.paths.PathChain;
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.IMU;
-
+import com.seattlesolvers.solverslib.command.CommandOpMode;
+import com.seattlesolvers.solverslib.command.RunCommand;
+import com.seattlesolvers.solverslib.command.button.Trigger;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+import org.firstinspires.ftc.teamcode.Commands.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveTrainSubsystem;
-import org.firstinspires.ftc.teamcode.Subsystems.ForkliftSubsystem;
-import org.firstinspires.ftc.teamcode.Subsystems.IndexerSubsystem;
-import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.SensorSubsystem;
-import org.firstinspires.ftc.teamcode.Subsystems.StagingSubsystem;
-import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 import java.util.List;
 
 @TeleOp
-public class TeleOPMode extends LinearOpMode {
-
-    private IMU imu;
-
-    private DriveTrainSubsystem driveTrainSubsystem;
-    private SensorSubsystem sensorSubsystem;
-    private ForkliftSubsystem forkliftSubsystem;
-    private IndexerSubsystem indexerSubsystem;
-    private IntakeSubsystem intakeSubsystem;
-    private StagingSubsystem stagingSubsystem;
-    private TurretSubsystem turretSubsystem;
-    private int lastTagId = 0;
+public class TeleOPMode extends CommandOpMode {
 
     @Override
-    public void runOpMode() {
+    public void initialize() {
+        int lastTagId = 0;
 
-        List<AprilTagDetection> detections = sensorSubsystem.getDetections();
+        DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(hardwareMap);
+        SensorSubsystem sensorSubsystem = new SensorSubsystem(hardwareMap);
+
+        sensorSubsystem.startLimelight();
+        LLResult result = sensorSubsystem.getLatestResult();
+        Pose3D pose = result.getBotpose();
+
+        List<LLResultTypes.FiducialResult> apriltagResult = result.getFiducialResults();
+        telemetry.addData("tx", result.getTx());
+        telemetry.addData("ty", result.getTy());
+        telemetry.addData("Status", "Running");
 
         int newTagId = lastTagId;
-        for (AprilTagDetection detection : detections) {
-            if (detection.id >= 21 && detection.id <= 23) {
-                newTagId = detection.id;
+        for (LLResultTypes.FiducialResult detection : apriltagResult) {
+            if (detection.getFiducialId() >= 21 && detection.getFiducialId() <= 23) {
+                newTagId = detection.getFiducialId();
                 break;
             }
-
-            driveTrainSubsystem = new DriveTrainSubsystem(hardwareMap);
-            sensorSubsystem = new SensorSubsystem(hardwareMap);
-            forkliftSubsystem = new ForkliftSubsystem(hardwareMap);
-            indexerSubsystem = new IndexerSubsystem(hardwareMap);
-            intakeSubsystem = new IntakeSubsystem(hardwareMap);
-            stagingSubsystem = new StagingSubsystem(hardwareMap);
-            turretSubsystem = new TurretSubsystem(hardwareMap);
-
-            telemetry.addData("Status", "Initialized");
-            telemetry.update();
-            sensorSubsystem.startLimelight();
-            waitForStart();
-
-            while (opModeIsActive()) {
-                SparkFunOTOS.Pose2D pose = SensorSubsystem.getPose2d();
-
-                telemetry.addData("Status", "Running");
-                telemetry.update();
-                telemetry.addData("X coordinate", pose.x);
-                telemetry.addData("Y coordinate", pose.y);
-                telemetry.addData("Heading angle", pose.h);
-                double lefty = -gamepad1.left_stick_y;
-                telemetry.addData("Motif", sensorSubsystem.getDetections());
-
-                double leftx = gamepad1.left_stick_x;
-                double rightx = gamepad1.right_stick_x;
-
-                double frontRightPower = (lefty + leftx + rightx);
-                double rearRightPower = (lefty - leftx + rightx);
-                double rearLeftPower = (lefty + leftx - rightx);
-                double frontLeftPower = (lefty - leftx - rightx);
-
-                driveTrainSubsystem.moveDrivetrain(
-                        frontRightPower,
-                        rearRightPower,
-                        frontLeftPower,
-                        rearLeftPower);
-
-            }
         }
+        telemetry.addData("Motif", sensorSubsystem.getMotif(newTagId));
+
+        Pose startPose = new Pose(60, 8.000, Math.toRadians(90));
+        PathChain path = driveTrainSubsystem.pathBuilder()
+                .addPath(new BezierLine(new Pose(60, 8.000), new Pose(60, 60)))
+                .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(180))
+                .addPath(new BezierLine(new Pose(60, 60), new Pose(100, 60)))
+                .setTangentHeadingInterpolation()
+                        .build();
+
+
+        register(driveTrainSubsystem, sensorSubsystem);
+
+        FollowPathCommand followPathCommand =
+                new FollowPathCommand(startPose, path, driveTrainSubsystem)
+                        .withGlobalMaxPower(0.5);
+
+        RunCommand teleopDriveCommand =
+                new RunCommand(() -> driveTrainSubsystem.driveFieldRelative(
+                        -gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x), driveTrainSubsystem);
+
+        new Trigger(() -> gamepad1.right_trigger > 0.1).whileActiveContinuous(
+                 followPathCommand);
+
+        driveTrainSubsystem.setDefaultCommand(teleopDriveCommand);
     }
 }

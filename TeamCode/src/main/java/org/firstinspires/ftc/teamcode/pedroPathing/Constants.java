@@ -38,7 +38,7 @@ public class Constants {
             .rightFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
             .rightRearMotorDirection(DcMotorSimple.Direction.REVERSE);
 
-    private static SparkFunOTOS.Pose2D cameraPose = new SparkFunOTOS.Pose2D(3.5, -9, -3);
+    private static SparkFunOTOS.Pose2D cameraPose = new SparkFunOTOS.Pose2D(0.09, -0.16, Math.PI);
 
     public static OTOSConstants localizerConstants = new OTOSConstants()
             .hardwareMapName("Odometry Device")
