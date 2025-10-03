@@ -5,11 +5,11 @@ import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
-public class SensorSubsystem extends SubsystemBase {
+public class LimelightSubsystem extends SubsystemBase {
 
     private final Limelight3A limelight;
 
-    public SensorSubsystem(HardwareMap hardwareMap) {
+    public LimelightSubsystem(HardwareMap hardwareMap) {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         limelight.pipelineSwitch(0);
     }

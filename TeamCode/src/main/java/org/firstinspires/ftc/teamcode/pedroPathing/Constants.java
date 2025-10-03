@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.pedroPathing;
 
+import com.pedropathing.control.PIDFCoefficients;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.ftc.FollowerBuilder;
@@ -27,6 +28,13 @@ public class Constants {
                 .build();
     }
 
+    public static final FollowerConstants FOLLOWER_CONSTANTS = new FollowerConstants()
+            .mass(5)
+            .forwardZeroPowerAcceleration(-58.742)
+            .lateralZeroPowerAcceleration(-82.934)
+            .translationalPIDFCoefficients(new PIDFCoefficients(0.1, 0, 0.0, 0))
+            .headingPIDFCoefficients(new PIDFCoefficients(0.8, 0, 0.0, 0));
+
     public static MecanumConstants driveConstants = new MecanumConstants()
             .maxPower(1)
             .rightFrontMotorName("frontRight")
@@ -42,7 +50,7 @@ public class Constants {
 
     public static OTOSConstants localizerConstants = new OTOSConstants()
             .hardwareMapName("Odometry Device")
-            .linearUnit(DistanceUnit.CM)
+            .linearUnit(DistanceUnit.INCH)
             .angleUnit(AngleUnit.RADIANS)
             .offset(cameraPose);
 }

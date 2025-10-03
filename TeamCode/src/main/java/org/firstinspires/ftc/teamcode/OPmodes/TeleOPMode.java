@@ -12,7 +12,8 @@ import com.seattlesolvers.solverslib.command.button.Trigger;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.Commands.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveTrainSubsystem;
-import org.firstinspires.ftc.teamcode.Subsystems.SensorSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.LimelightSubsystem;
 
 import java.util.List;
 
@@ -24,7 +25,8 @@ public class TeleOPMode extends CommandOpMode {
         int lastTagId = 0;
 
         DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(hardwareMap);
-        SensorSubsystem sensorSubsystem = new SensorSubsystem(hardwareMap);
+        LimelightSubsystem sensorSubsystem = new LimelightSubsystem(hardwareMap);
+        IntakeSubsystem intakeSubsystem = new IntakeSubsystem(hardwareMap);
 
         sensorSubsystem.startLimelight();
         LLResult result = sensorSubsystem.getLatestResult();
@@ -62,6 +64,16 @@ public class TeleOPMode extends CommandOpMode {
         RunCommand teleopDriveCommand =
                 new RunCommand(() -> driveTrainSubsystem.driveFieldRelative(
                         -gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x), driveTrainSubsystem);
+
+        RunCommand intakeCommand =
+                new RunCommand(() -> intakeSubsystem.runIntakeMotor());
+
+        RunCommand stopIntakeCommand =
+                new RunCommand(() -> intakeSubsystem.stop());
+
+        new Trigger(() -> gamepad1.right_bumper).whenActive(intakeCommand);
+
+        new Trigger(() -> gamepad1.left_bumper).whenActive(stopIntakeCommand);
 
         new Trigger(() -> gamepad1.right_trigger > 0.1).whileActiveContinuous(
                  followPathCommand);

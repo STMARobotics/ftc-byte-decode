@@ -14,4 +14,12 @@ public class ForkliftSubsystem extends SubsystemBase {
         forkliftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
     }
+
+    public int getMotorPosition() {
+        return forkliftMotor.getCurrentPosition();
+    }
+
+    public void setMotorPosition(int position) {
+        forkliftMotor.setTargetPosition(position);
+    }
 }
