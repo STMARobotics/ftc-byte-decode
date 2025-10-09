@@ -3,17 +3,13 @@ package org.firstinspires.ftc.teamcode.OPmodes;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
-import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.command.button.Trigger;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.Commands.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveTrainSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.Subsystems.LimelightSubsystem;
 
 import java.util.List;
 
@@ -25,26 +21,7 @@ public class TeleOPMode extends CommandOpMode {
         int lastTagId = 0;
 
         DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(hardwareMap);
-        LimelightSubsystem sensorSubsystem = new LimelightSubsystem(hardwareMap);
         IntakeSubsystem intakeSubsystem = new IntakeSubsystem(hardwareMap);
-
-        sensorSubsystem.startLimelight();
-        LLResult result = sensorSubsystem.getLatestResult();
-        Pose3D pose = result.getBotpose();
-
-        List<LLResultTypes.FiducialResult> apriltagResult = result.getFiducialResults();
-        telemetry.addData("tx", result.getTx());
-        telemetry.addData("ty", result.getTy());
-        telemetry.addData("Status", "Running");
-
-        int newTagId = lastTagId;
-        for (LLResultTypes.FiducialResult detection : apriltagResult) {
-            if (detection.getFiducialId() >= 21 && detection.getFiducialId() <= 23) {
-                newTagId = detection.getFiducialId();
-                break;
-            }
-        }
-        telemetry.addData("Motif", sensorSubsystem.getMotif(newTagId));
 
         Pose startPose = new Pose(60, 8.000, Math.toRadians(90));
         PathChain path = driveTrainSubsystem.pathBuilder()
@@ -55,7 +32,7 @@ public class TeleOPMode extends CommandOpMode {
                         .build();
 
 
-        register(driveTrainSubsystem, sensorSubsystem);
+        register(driveTrainSubsystem);
 
         FollowPathCommand followPathCommand =
                 new FollowPathCommand(startPose, path, driveTrainSubsystem)
