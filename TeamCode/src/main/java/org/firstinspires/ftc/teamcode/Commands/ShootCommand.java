@@ -1,19 +1,18 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
 import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.command.CommandBase;
 
 import org.firstinspires.ftc.teamcode.Subsystems.IndexerSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.LimelightSubsystem;
 
-public class ShootGreenCommand extends CommandBase {
+public class ShootCommand extends CommandBase {
 
     private final IndexerSubsystem indexerSubsystem;
     private final LimelightSubsystem limelightSubsystem;
 
-    public ShootGreenCommand(IndexerSubsystem indexerSubsystem,
+    public ShootCommand(IndexerSubsystem indexerSubsystem,
                              LimelightSubsystem limelightSubsystem) {
         this.indexerSubsystem = indexerSubsystem;
         this.limelightSubsystem = limelightSubsystem;
