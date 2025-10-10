@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import android.hardware.Sensor;
+
 import org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants;
+import org.firstinspires.ftc.teamcode.Constants.SensorConstants;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.paths.PathBuilder;
@@ -26,18 +29,19 @@ public class DriveTrainSubsystem extends SubsystemBase {
     public DriveTrainSubsystem(HardwareMap hardwareMap) {
         follower = Constants.createFollower(hardwareMap);
 
-        frontRight = hardwareMap.get(DcMotor.class, "frontRight");
-        rearRight = hardwareMap.get(DcMotor.class, "rearRight");
-        rearLeft = hardwareMap.get(DcMotor.class, "rearLeft");
-        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
+        frontRight = hardwareMap.get(DcMotor.class, DriveTrainConstants.FRONT_RIGHT_MOTOR_NAME);
+        rearRight = hardwareMap.get(DcMotor.class, DriveTrainConstants.BACK_RIGHT_MOTOR_NAME);
+        rearLeft = hardwareMap.get(DcMotor.class, DriveTrainConstants.BACK_LEFT_MOTOR_NAME);
+        frontLeft = hardwareMap.get(DcMotor.class, DriveTrainConstants.FRONT_LEFT_MOTOR_NAME);
 
-        Otos = hardwareMap.get(SparkFunOTOS.class, "Odometry Device");
+
+
+        Otos = hardwareMap.get(SparkFunOTOS.class, SensorConstants.SPARKFUN_OTOS_NAME);
         Otos.setLinearUnit(DistanceUnit.METER);
         Otos.setAngularUnit(AngleUnit.RADIANS);
-        SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(0.09, -0.16, Math.PI);
-        Otos.setOffset(offset);
-        Otos.setLinearScalar(1);
-        Otos.setAngularScalar(1);
+        Otos.setOffset(SensorConstants.OTOS_OFFSET);
+        Otos.setLinearScalar(SensorConstants.OTOS_LINEAR_SCALAR);
+        Otos.setAngularScalar(SensorConstants.OTOS_ANGULAR_SCALAR);
         Otos.calibrateImu();
         Otos.resetTracking();
 
