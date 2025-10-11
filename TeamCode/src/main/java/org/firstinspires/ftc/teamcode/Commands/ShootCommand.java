@@ -1,4 +1,8 @@
+
+/*
 package org.firstinspires.ftc.teamcode.Commands;
+
+import org.firstinspires.ftc.teamcode.Constants.ShootingConstants;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.command.CommandBase;
@@ -13,6 +17,8 @@ public class ShootCommand extends CommandBase {
 
     public ShootCommand(ShootingSubsystem shootingSubsystem) {
         this.shootingSubsystem = shootingSubsystem;
+
+        addRequirements(shootingSubsystem);
     }
 
     @Override
@@ -25,22 +31,24 @@ public class ShootCommand extends CommandBase {
         switch(shootingState) {
             case 0:
                 shootingSubsystem.runShooterMotor(1);
-                if (shootingSubsystem.getShooterSpeed() == 60) {
+                if (shootingSubsystem.getShooterSpeed() >= ShootingConstants.SHOOTING_SPEED) {
                     shootingState = 1;
                     timer.reset();
                 }
+                break;
             case 1:
-                shootingSubsystem.runIndexer(1);
-                if (timer.seconds() == 2) {
+                shootingSubsystem.runIndexer(ShootingConstants.INDEXING_SPEED);
+                if (timer.seconds() >= 2) {
                     shootingState = 2;
                     timer.reset();
                 }
+                break;
         }
     }
 
     @Override
     public boolean isFinished() {
-        return (timer.seconds() == 2 && shootingState == 1);
+        return (timer.seconds() >= 2 && shootingState == 2);
     }
 
     @Override
@@ -48,3 +56,6 @@ public class ShootCommand extends CommandBase {
         shootingSubsystem.stop();
     }
 }
+
+
+ */

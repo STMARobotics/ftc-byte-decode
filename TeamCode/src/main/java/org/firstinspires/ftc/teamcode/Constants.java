@@ -20,10 +20,12 @@ public final class Constants {
     public static final class ShootingConstants {
         public static final String SHOOTER_MOTOR_NAME = "shooterMotor";
         public static final String INDEXER_MOTOR_NAME = "indexerMotor";
+        public static final int SHOOTING_SPEED = 3000*360*60; // degrees per second
+        public static final double INDEXING_SPEED = 1; // percent of power applied from 0 < speed < 1
     }
 
     public static final class IntakeConstants {
-        public static final String INTAKE_MOTOR_NAME = "";
-        public static final double INTAKE_SPEED = 1;
+        public static final String INTAKE_MOTOR_NAME = "intakeMotor";
+        public static final double INTAKE_SPEED = 1; // percent of power applied from 0 < speed < 1
     }
 }

@@ -6,12 +6,12 @@ import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.RunCommand;
+import com.seattlesolvers.solverslib.command.StartEndCommand;
 import com.seattlesolvers.solverslib.command.button.Trigger;
 import org.firstinspires.ftc.teamcode.Commands.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveTrainSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
-
-import java.util.List;
+import org.firstinspires.ftc.teamcode.Subsystems.ShootingSubsystem;
 
 @TeleOp
 public class TeleOPMode extends CommandOpMode {
@@ -22,6 +22,7 @@ public class TeleOPMode extends CommandOpMode {
 
         DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(hardwareMap);
         IntakeSubsystem intakeSubsystem = new IntakeSubsystem(hardwareMap);
+        ShootingSubsystem shootingSubsystem = new ShootingSubsystem(hardwareMap);
 
         Pose startPose = new Pose(60, 8.000, Math.toRadians(90));
         PathChain path = driveTrainSubsystem.pathBuilder()
@@ -31,6 +32,8 @@ public class TeleOPMode extends CommandOpMode {
                 .setTangentHeadingInterpolation()
                         .build();
 
+
+        telemetry.addData("h value", driveTrainSubsystem.getH());
 
         register(driveTrainSubsystem);
 
@@ -43,18 +46,25 @@ public class TeleOPMode extends CommandOpMode {
                         -gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x), driveTrainSubsystem);
 
         RunCommand intakeCommand =
-                new RunCommand(() -> intakeSubsystem.runIntakeMotor());
+                new RunCommand(intakeSubsystem::runIntakeMotor, intakeSubsystem);
 
         RunCommand stopIntakeCommand =
-                new RunCommand(() -> intakeSubsystem.stop());
+                new RunCommand(intakeSubsystem::stop, intakeSubsystem);
+
+        StartEndCommand primShootCommand =
+                new StartEndCommand(shootingSubsystem::runShooterMotor, shootingSubsystem::stopShooter, shootingSubsystem);
+
+        StartEndCommand primIndexCommand =
+                new StartEndCommand(shootingSubsystem::runIndexer, shootingSubsystem::stopIndexer, shootingSubsystem);
 
         new Trigger(() -> gamepad1.right_bumper).whenActive(intakeCommand);
 
         new Trigger(() -> gamepad1.left_bumper).whenActive(stopIntakeCommand);
 
-        new Trigger(() -> gamepad1.right_trigger > 0.1).whileActiveContinuous(
-                 followPathCommand);
+        new Trigger(() -> gamepad1.right_trigger > 0.1).whileActiveContinuous(primShootCommand);
 
-        driveTrainSubsystem.setDefaultCommand(teleopDriveCommand);
+        new Trigger(() -> gamepad1.a).toggleWhenActive(primIndexCommand);
+
+                driveTrainSubsystem.setDefaultCommand(teleopDriveCommand);
     }
 }

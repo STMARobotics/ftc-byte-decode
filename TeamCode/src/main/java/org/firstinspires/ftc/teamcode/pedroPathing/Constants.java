@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.pedroPathing;
 
+import org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants;
+import org.firstinspires.ftc.teamcode.Constants.SensorConstants;
+
 import com.pedropathing.control.PIDFCoefficients;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.follower.FollowerConstants;
@@ -7,7 +10,6 @@ import com.pedropathing.ftc.FollowerBuilder;
 import com.pedropathing.ftc.drivetrains.MecanumConstants;
 import com.pedropathing.ftc.localization.constants.OTOSConstants;
 import com.pedropathing.paths.PathConstraints;
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -37,20 +39,18 @@ public class Constants {
 
     public static MecanumConstants driveConstants = new MecanumConstants()
             .maxPower(1)
-            .rightFrontMotorName("frontRight")
-            .rightRearMotorName("rearRight")
-            .leftRearMotorName("rearLeft")
-            .leftFrontMotorName("frontLeft")
+            .rightFrontMotorName(DriveTrainConstants.FRONT_RIGHT_MOTOR_NAME)
+            .rightRearMotorName(DriveTrainConstants.BACK_RIGHT_MOTOR_NAME)
+            .leftRearMotorName(DriveTrainConstants.BACK_LEFT_MOTOR_NAME)
+            .leftFrontMotorName(DriveTrainConstants.FRONT_LEFT_MOTOR_NAME)
             .leftFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
             .leftRearMotorDirection(DcMotorSimple.Direction.FORWARD)
             .rightFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
             .rightRearMotorDirection(DcMotorSimple.Direction.REVERSE);
 
-    private static SparkFunOTOS.Pose2D cameraPose = new SparkFunOTOS.Pose2D(0.09, -0.16, Math.PI);
-
     public static OTOSConstants localizerConstants = new OTOSConstants()
-            .hardwareMapName("Odometry Device")
+            .hardwareMapName(SensorConstants.SPARKFUN_OTOS_NAME)
             .linearUnit(DistanceUnit.INCH)
             .angleUnit(AngleUnit.RADIANS)
-            .offset(cameraPose);
+            .offset(SensorConstants.OTOS_OFFSET);
 }

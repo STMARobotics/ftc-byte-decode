@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 import org.firstinspires.ftc.teamcode.Constants.ShootingConstants;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
@@ -16,19 +17,25 @@ public class ShootingSubsystem extends SubsystemBase {
     public ShootingSubsystem(HardwareMap hardwareMap) {
         shooterMotor = hardwareMap.get(DcMotorEx.class, ShootingConstants.SHOOTER_MOTOR_NAME);
         indexerMotor = hardwareMap.get(DcMotorEx.class, ShootingConstants.INDEXER_MOTOR_NAME);
+
+        shooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        indexerMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
-    public void runShooterMotor(double speed) {
-        shooterMotor.setPower(speed);
+    public void runShooterMotor() {
+        shooterMotor.setPower(1);
     }
 
-    public void runIndexer(double speed) {
-        indexerMotor.setPower(speed);
+    public void runIndexer() {
+        indexerMotor.setPower(1);
     }
 
-    public void stop() {
-        shooterMotor.setPower(0);
+    public void stopIndexer() {
         indexerMotor.setPower(0);
+    }
+
+    public void stopShooter() {
+        shooterMotor.setPower(0);
     }
 
     public double getShooterSpeed() {

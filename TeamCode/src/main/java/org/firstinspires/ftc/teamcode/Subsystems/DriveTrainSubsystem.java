@@ -97,6 +97,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
         rearRight.setPower(maxSpeed * (backRightPower / maxPower));
     }
 
+    public double getH() {
+        return Otos.getPosition().h;
+    }
+
     public void stopDrivetrain() {
         frontLeft.setPower(0);
         rearLeft.setPower(0);
