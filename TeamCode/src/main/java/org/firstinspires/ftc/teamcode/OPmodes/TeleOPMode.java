@@ -9,6 +9,7 @@ import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.command.StartEndCommand;
 import com.seattlesolvers.solverslib.command.button.Trigger;
 import org.firstinspires.ftc.teamcode.Commands.FollowPathCommand;
+import org.firstinspires.ftc.teamcode.Commands.ShootCommand;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveTrainSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.ShootingSubsystem;
@@ -18,11 +19,10 @@ public class TeleOPMode extends CommandOpMode {
 
     @Override
     public void initialize() {
-        int lastTagId = 0;
 
-        DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(hardwareMap);
+        DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(hardwareMap, telemetry);
         IntakeSubsystem intakeSubsystem = new IntakeSubsystem(hardwareMap);
-        ShootingSubsystem shootingSubsystem = new ShootingSubsystem(hardwareMap);
+        ShootingSubsystem shootingSubsystem = new ShootingSubsystem(hardwareMap, telemetry);
 
         Pose startPose = new Pose(60, 8.000, Math.toRadians(90));
         PathChain path = driveTrainSubsystem.pathBuilder()
@@ -32,14 +32,13 @@ public class TeleOPMode extends CommandOpMode {
                 .setTangentHeadingInterpolation()
                         .build();
 
-
-        telemetry.addData("h value", driveTrainSubsystem.getH());
-
-        register(driveTrainSubsystem);
+        register(driveTrainSubsystem, intakeSubsystem, shootingSubsystem);
 
         FollowPathCommand followPathCommand =
                 new FollowPathCommand(startPose, path, driveTrainSubsystem)
                         .withGlobalMaxPower(0.5);
+
+        telemetry.addData("Is Path Scheduled", followPathCommand.isScheduled());
 
         RunCommand teleopDriveCommand =
                 new RunCommand(() -> driveTrainSubsystem.driveFieldRelative(
@@ -51,8 +50,11 @@ public class TeleOPMode extends CommandOpMode {
         RunCommand stopIntakeCommand =
                 new RunCommand(intakeSubsystem::stop, intakeSubsystem);
 
+        RunCommand resetPositionCommand =
+                new RunCommand(driveTrainSubsystem::resetLocalization);
+
         StartEndCommand primShootCommand =
-                new StartEndCommand(shootingSubsystem::runShooterMotor, shootingSubsystem::stopShooter, shootingSubsystem);
+                new StartEndCommand(shootingSubsystem::runShooterMotor, shootingSubsystem::stopShooter);
 
         StartEndCommand primIndexCommand =
                 new StartEndCommand(shootingSubsystem::runIndexer, shootingSubsystem::stopIndexer, shootingSubsystem);
@@ -65,6 +67,13 @@ public class TeleOPMode extends CommandOpMode {
 
         new Trigger(() -> gamepad1.a).toggleWhenActive(primIndexCommand);
 
+        new Trigger(() -> gamepad1.b).toggleWhenActive(followPathCommand);
+
+        new Trigger(() -> gamepad1.x).whenActive(resetPositionCommand);
+
+        new Trigger(() -> gamepad1.y).whileActiveContinuous(new ShootCommand(shootingSubsystem));
                 driveTrainSubsystem.setDefaultCommand(teleopDriveCommand);
+
+        new RunCommand(telemetry::update).schedule();
     }
 }

@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
-import android.hardware.Sensor;
-
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants;
 import org.firstinspires.ftc.teamcode.Constants.SensorConstants;
 
 import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathBuilder;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -25,8 +25,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
     private final DcMotor frontLeft;
     private final SparkFunOTOS Otos;
     private final Follower follower;
+    private final Telemetry telemetry;
 
-    public DriveTrainSubsystem(HardwareMap hardwareMap) {
+    public DriveTrainSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
+        this.telemetry = telemetry;
         follower = Constants.createFollower(hardwareMap);
 
         frontRight = hardwareMap.get(DcMotor.class, DriveTrainConstants.FRONT_RIGHT_MOTOR_NAME);
@@ -56,6 +58,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     }
 
     public void driveFieldRelative(double forward, double right, double rotate) {
+
         double theta = Math.atan2(forward, right);
         double r = Math.hypot(right, forward);
 
@@ -97,8 +100,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
         rearRight.setPower(maxSpeed * (backRightPower / maxPower));
     }
 
-    public double getH() {
-        return Otos.getPosition().h;
+    public void resetLocalization() {
+        Pose resetPose = new Pose();
+        follower.setStartingPose(resetPose);
+        follower.setPose(resetPose);
     }
 
     public void stopDrivetrain() {
@@ -106,5 +111,12 @@ public class DriveTrainSubsystem extends SubsystemBase {
         rearLeft.setPower(0);
         frontRight.setPower(0);
         rearRight.setPower(0);
+    }
+
+    @Override
+    public void periodic() {
+        telemetry.addData("x", Otos.getPosition().x);
+        telemetry.addData("y", Otos.getPosition().y);
+        telemetry.addData("h", Otos.getPosition().h);
     }
 }

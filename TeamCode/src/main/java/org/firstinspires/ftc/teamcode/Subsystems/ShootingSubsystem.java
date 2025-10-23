@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Constants.ShootingConstants;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -13,8 +14,11 @@ public class ShootingSubsystem extends SubsystemBase {
 
     private final DcMotorEx shooterMotor;
     private final DcMotorEx indexerMotor;
+    private final Telemetry telemetry;
 
-    public ShootingSubsystem(HardwareMap hardwareMap) {
+    public ShootingSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
+        this.telemetry = telemetry;
+
         shooterMotor = hardwareMap.get(DcMotorEx.class, ShootingConstants.SHOOTER_MOTOR_NAME);
         indexerMotor = hardwareMap.get(DcMotorEx.class, ShootingConstants.INDEXER_MOTOR_NAME);
 
@@ -23,11 +27,11 @@ public class ShootingSubsystem extends SubsystemBase {
     }
 
     public void runShooterMotor() {
-        shooterMotor.setPower(1);
+        shooterMotor.setVelocity(ShootingConstants.SHOOTING_SPEED);
     }
 
     public void runIndexer() {
-        indexerMotor.setPower(1);
+        indexerMotor.setPower(ShootingConstants.INDEXING_SPEED);
     }
 
     public void stopIndexer() {
@@ -39,8 +43,12 @@ public class ShootingSubsystem extends SubsystemBase {
     }
 
     public double getShooterSpeed() {
-        return shooterMotor.getVelocity(AngleUnit.DEGREES);
+        return shooterMotor.getVelocity();
     }
 
-
+    @Override
+    public void periodic() {
+        telemetry.addData("Indexer Motor", indexerMotor.getPower());
+        telemetry.addData("Shooter Speed", getShooterSpeed());
+    }
 }

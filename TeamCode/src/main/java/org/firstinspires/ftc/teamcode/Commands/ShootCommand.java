@@ -1,5 +1,3 @@
-
-/*
 package org.firstinspires.ftc.teamcode.Commands;
 
 import org.firstinspires.ftc.teamcode.Constants.ShootingConstants;
@@ -30,14 +28,14 @@ public class ShootCommand extends CommandBase {
     public void execute() {
         switch(shootingState) {
             case 0:
-                shootingSubsystem.runShooterMotor(1);
+                shootingSubsystem.runShooterMotor();
                 if (shootingSubsystem.getShooterSpeed() >= ShootingConstants.SHOOTING_SPEED) {
                     shootingState = 1;
                     timer.reset();
                 }
                 break;
             case 1:
-                shootingSubsystem.runIndexer(ShootingConstants.INDEXING_SPEED);
+                shootingSubsystem.runIndexer();
                 if (timer.seconds() >= 2) {
                     shootingState = 2;
                     timer.reset();
@@ -53,9 +51,7 @@ public class ShootCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        shootingSubsystem.stop();
+        shootingSubsystem.stopIndexer();
+        shootingSubsystem.stopShooter();
     }
 }
-
-
- */

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Constants.IntakeConstants;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,11 +13,9 @@ public class IntakeSubsystem extends SubsystemBase {
     private final DcMotor intakeMotor;
 
     public IntakeSubsystem(HardwareMap hardwareMap) {
-
         intakeMotor = hardwareMap.get(DcMotor.class, IntakeConstants.INTAKE_MOTOR_NAME);
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
     }
 
     public void runIntakeMotor() {
