@@ -17,8 +17,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Constants {
-    public static FollowerConstants followerConstants = new FollowerConstants()
-            .mass(5);
 
     public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);
 
@@ -30,12 +28,12 @@ public class Constants {
                 .build();
     }
 
-    public static final FollowerConstants FOLLOWER_CONSTANTS = new FollowerConstants()
+    public static final FollowerConstants followerConstants = new FollowerConstants()
             .mass(5)
             .forwardZeroPowerAcceleration(-58.742)
             .lateralZeroPowerAcceleration(-82.934)
             .translationalPIDFCoefficients(new PIDFCoefficients(0.1, 0, 0.0, 0))
-            .headingPIDFCoefficients(new PIDFCoefficients(0.8, 0, 0.0, 0));
+            .headingPIDFCoefficients(new PIDFCoefficients(0.1, 0, 0.0, 0));
 
     public static MecanumConstants driveConstants = new MecanumConstants()
             .maxPower(1)
@@ -46,7 +44,9 @@ public class Constants {
             .leftFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
             .leftRearMotorDirection(DcMotorSimple.Direction.FORWARD)
             .rightFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .rightRearMotorDirection(DcMotorSimple.Direction.REVERSE);
+            .rightRearMotorDirection(DcMotorSimple.Direction.REVERSE)
+            .xVelocity(65)
+            .yVelocity(52);
 
     public static OTOSConstants localizerConstants = new OTOSConstants()
             .hardwareMapName(SensorConstants.SPARKFUN_OTOS_NAME)

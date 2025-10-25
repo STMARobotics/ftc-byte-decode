@@ -5,16 +5,20 @@ import org.firstinspires.ftc.teamcode.Constants.ShootingConstants;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.command.CommandBase;
 
+import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.ShootingSubsystem;
 
 public class ShootCommand extends CommandBase {
 
     private final ShootingSubsystem shootingSubsystem;
+    private final IntakeSubsystem intakeSubsystem;
     private int shootingState = 0;
     private final ElapsedTime timer = new ElapsedTime();
+    private boolean Auto;
 
-    public ShootCommand(ShootingSubsystem shootingSubsystem) {
+    public ShootCommand(ShootingSubsystem shootingSubsystem, IntakeSubsystem intakeSubsystem, boolean Auto) {
         this.shootingSubsystem = shootingSubsystem;
+        this.intakeSubsystem = intakeSubsystem;
 
         addRequirements(shootingSubsystem);
     }
@@ -28,7 +32,11 @@ public class ShootCommand extends CommandBase {
     public void execute() {
         switch(shootingState) {
             case 0:
-                shootingSubsystem.runShooterMotor();
+                if (Auto) {
+                    shootingSubsystem.runShooterMotorAuto();
+                } else {
+                    shootingSubsystem.runShooterMotor();
+                }
                 if (shootingSubsystem.getShooterSpeed() >= ShootingConstants.SHOOTING_SPEED) {
                     shootingState = 1;
                     timer.reset();
@@ -36,6 +44,8 @@ public class ShootCommand extends CommandBase {
                 break;
             case 1:
                 shootingSubsystem.runIndexer();
+                intakeSubsystem.runIntakeMotor();
+
                 if (timer.seconds() >= 2) {
                     shootingState = 2;
                     timer.reset();

@@ -30,6 +30,10 @@ public class ShootingSubsystem extends SubsystemBase {
         shooterMotor.setVelocity(ShootingConstants.SHOOTING_SPEED);
     }
 
+    public void runShooterMotorAuto() {
+        shooterMotor.setVelocity(1150);
+    }
+
     public void runIndexer() {
         indexerMotor.setPower(ShootingConstants.INDEXING_SPEED);
     }
