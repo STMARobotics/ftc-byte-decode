@@ -41,10 +41,10 @@ public class Constants {
             .rightRearMotorName(DriveTrainConstants.BACK_RIGHT_MOTOR_NAME)
             .leftRearMotorName(DriveTrainConstants.BACK_LEFT_MOTOR_NAME)
             .leftFrontMotorName(DriveTrainConstants.FRONT_LEFT_MOTOR_NAME)
-            .leftFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
-            .leftRearMotorDirection(DcMotorSimple.Direction.FORWARD)
-            .rightFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .rightRearMotorDirection(DcMotorSimple.Direction.REVERSE)
+            .leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
+            .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
+            .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD)
             .xVelocity(65)
             .yVelocity(52);
 

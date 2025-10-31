@@ -10,7 +10,6 @@ import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.command.button.Trigger;
 
-import org.firstinspires.ftc.teamcode.Commands.AutoCommand;
 import org.firstinspires.ftc.teamcode.Commands.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.Commands.ShootCommand;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveTrainSubsystem;
@@ -38,10 +37,6 @@ public class RedAutoOPMode extends CommandOpMode {
                 new FollowPathCommand(startPose, path, driveTrainSubsystem)
                         .withGlobalMaxPower(0.5);
 
-        RunCommand teleopDriveCommand =
-                new RunCommand(() -> driveTrainSubsystem.driveFieldRelative(
-                        -gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x), driveTrainSubsystem);
-
         InstantCommand resetPositionCommand =
                 new InstantCommand(driveTrainSubsystem::resetLocalization);
 
@@ -51,8 +46,11 @@ public class RedAutoOPMode extends CommandOpMode {
 
         new RunCommand(telemetry::update).schedule();
 
-        Command autoCommand = new AutoCommand(driveTrainSubsystem, "Red").andThen(new ShootCommand(shootingSubsystem, intakeSubsystem, true)).andThen(new ShootCommand(shootingSubsystem, intakeSubsystem, true));
+        Command autoCommand = new ShootCommand(shootingSubsystem, intakeSubsystem, true)
+                .andThen(new ShootCommand(shootingSubsystem, intakeSubsystem, true));
 
-        new Trigger(this::opModeIsActive).whileActiveOnce(autoCommand);
+        schedule();
+
+        new Trigger(this::opModeIsActive).whileActiveOnce(followPathCommand);
     }
 }

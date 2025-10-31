@@ -10,7 +10,6 @@ import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.command.button.Trigger;
 
-import org.firstinspires.ftc.teamcode.Commands.AutoCommand;
 import org.firstinspires.ftc.teamcode.Commands.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.Commands.ShootCommand;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveTrainSubsystem;
@@ -29,7 +28,7 @@ public class BlueAutoOPMode extends CommandOpMode {
         Pose startPose = new Pose(60, 8.000, Math.toRadians(90));
         PathChain path = driveTrainSubsystem.pathBuilder()
                 .addPath(new BezierLine(new Pose(60, 8.000), new Pose(60, 10)))
-                .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(100))
+                .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(180))
                 .build();
 
         register(driveTrainSubsystem, intakeSubsystem, shootingSubsystem);
@@ -38,10 +37,6 @@ public class BlueAutoOPMode extends CommandOpMode {
                 new FollowPathCommand(startPose, path, driveTrainSubsystem)
                         .withGlobalMaxPower(0.5);
 
-        RunCommand teleopDriveCommand =
-                new RunCommand(() -> driveTrainSubsystem.driveFieldRelative(
-                        -gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x), driveTrainSubsystem);
-
         InstantCommand resetPositionCommand =
                 new InstantCommand(driveTrainSubsystem::resetLocalization);
 
@@ -49,11 +44,16 @@ public class BlueAutoOPMode extends CommandOpMode {
 
         new Trigger(() -> gamepad1.x).whenActive(resetPositionCommand);
 
+        Command autoCommand = new ShootCommand(shootingSubsystem, intakeSubsystem, true)
+                .andThen(new ShootCommand(shootingSubsystem, intakeSubsystem, true));
+
+//        new Trigger(this::opModeIsActive).whileActiveOnce(followPathCommand);
+
+        new RunCommand(() ->
+                telemetry.addData("isScheduled", followPathCommand.isScheduled())).schedule();
         new RunCommand(telemetry::update).schedule();
 
-        Command autoCommand = new AutoCommand(driveTrainSubsystem, "Blue").andThen(new ShootCommand(shootingSubsystem, intakeSubsystem, true)).andThen(new ShootCommand(shootingSubsystem, intakeSubsystem, true));
-
-        new Trigger(this::opModeIsActive).whileActiveOnce(autoCommand);
+        schedule(followPathCommand);
 
     }
 

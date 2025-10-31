@@ -12,7 +12,7 @@ public final class Constants {
 
     public static final class SensorConstants {
         public static final String SPARKFUN_OTOS_NAME = "Odometry Device";
-        public static final SparkFunOTOS.Pose2D OTOS_OFFSET = new SparkFunOTOS.Pose2D(0.09, -0.16, Math.PI);
+        public static final SparkFunOTOS.Pose2D OTOS_OFFSET = new SparkFunOTOS.Pose2D(0.09, -0.16, Math.PI/2);
         public static final int OTOS_LINEAR_SCALAR = 1;
         public static final int OTOS_ANGULAR_SCALAR = 1;
     }

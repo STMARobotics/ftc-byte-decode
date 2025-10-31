@@ -5,6 +5,7 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
+import com.seattlesolvers.solverslib.command.FunctionalCommand;
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.command.StartEndCommand;
@@ -25,6 +26,16 @@ public class TeleOPMode extends CommandOpMode {
         IntakeSubsystem intakeSubsystem = new IntakeSubsystem(hardwareMap);
         ShootingSubsystem shootingSubsystem = new ShootingSubsystem(hardwareMap, telemetry);
 
+        FunctionalCommand teleopDriveCommand = new FunctionalCommand(driveTrainSubsystem::startTeleop,
+                () -> driveTrainSubsystem.drive(
+                        -gamepad1.left_stick_y,
+                        -gamepad1.left_stick_x,
+                        -gamepad1.right_stick_x,
+                        1),
+                (b) -> driveTrainSubsystem.stopDrivetrain(),
+                () -> false,
+                driveTrainSubsystem);
+
         Pose startPose = new Pose(60, 8.000, Math.toRadians(90));
         PathChain path = driveTrainSubsystem.pathBuilder()
                 .addPath(new BezierLine(new Pose(60, 8.000), new Pose(60, 60)))
@@ -37,15 +48,11 @@ public class TeleOPMode extends CommandOpMode {
                 new FollowPathCommand(startPose, path, driveTrainSubsystem)
                         .withGlobalMaxPower(0.5);
 
-        RunCommand teleopDriveCommand =
-                new RunCommand(() -> driveTrainSubsystem.driveFieldRelative(
-                        -gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x), driveTrainSubsystem);
-
         StartEndCommand intakeCommand =
                 new StartEndCommand(intakeSubsystem::runIntakeMotor, intakeSubsystem::stop, intakeSubsystem);
 
         InstantCommand resetPositionCommand =
-                new InstantCommand(driveTrainSubsystem::resetLocalization);
+                new InstantCommand(driveTrainSubsystem::resetLocalization, driveTrainSubsystem);
 
         new Trigger(() -> gamepad1.right_bumper).toggleWhenActive(intakeCommand);
 
