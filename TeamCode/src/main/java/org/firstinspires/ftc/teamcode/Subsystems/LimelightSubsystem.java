@@ -5,11 +5,13 @@ import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 public class LimelightSubsystem extends SubsystemBase {
 
     private final Limelight3A limelight;
 
-    public LimelightSubsystem(HardwareMap hardwareMap) {
+    public LimelightSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         limelight.pipelineSwitch(0);
     }
@@ -32,5 +34,9 @@ public class LimelightSubsystem extends SubsystemBase {
                 return "PPG";
         }
         return "None";
+    }
+
+    public void periodic() {
+        telemetry.addData("Motif", sensorSubsystem.getMotif(newTagId));
     }
 }
