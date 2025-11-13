@@ -50,7 +50,7 @@ public class ShootCommand extends CommandBase {
                 }
                 break;
             case SHOOT:
-                indexerSubsystem.index();
+                indexerSubsystem.shoot();
                 timer.reset();
                 if (timer.seconds() > SHOOTING_TIME) {
                     shootingState = ShootingState.END;
@@ -59,7 +59,7 @@ public class ShootCommand extends CommandBase {
                 break;
             case END:
             indexerSubsystem.stop();
-            turretSubsystem.stop();
+            turretSubsystem.stopShooter();
         }
     }
 

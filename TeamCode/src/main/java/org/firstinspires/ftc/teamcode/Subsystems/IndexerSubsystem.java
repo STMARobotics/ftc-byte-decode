@@ -25,7 +25,7 @@ public class IndexerSubsystem extends SubsystemBase {
         indexerRightServo.setPower(power);
     }
 
-    public void index() {
+    public void shoot() {
         runLeftIndexer(INDEXING_SPEED);
         runRightIndexer(INDEXING_SPEED);
     }

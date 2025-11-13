@@ -13,14 +13,18 @@ public final class Constants {
     public static final class SensorConstants {
         public static final String SPARKFUN_OTOS_NAME = "Odometry Device";
         public static final SparkFunOTOS.Pose2D OTOS_OFFSET = new SparkFunOTOS.Pose2D(0.09, -0.16, Math.PI/2);
-        public static final int OTOS_LINEAR_SCALAR = 1;
-        public static final int OTOS_ANGULAR_SCALAR = 1;
     }
 
     public static final class TurretConstants {
-        public static final String SHOOTER_MOTOR_NAME = "shooterMotor";
         public static final int SHOOTING_SPEED = 1300;
         public static final double SHOOTING_TIME = 0.2;
+        public static final double TURRET_MAX_DEGREE = 145.0;
+        public static final double TURRET_MIN_DEGREE = -145.0;
+        public static final double POTENTIOMETER_MIN_VOLTAGE = 0.9;
+        public static final double POTENTIOMETER_MAX_VOLTAGE = 1.8;
+        public static final double TURRET_KP = 0.028;
+        public static final double TURRET_KD = 0.004;
+        public static final double TURRET_DEGREE_TOLERANCE = 2;
     }
 
     public static final class IntakeConstants {

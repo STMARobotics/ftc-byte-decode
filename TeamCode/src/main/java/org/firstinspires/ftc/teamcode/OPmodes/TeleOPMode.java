@@ -11,35 +11,36 @@ import com.seattlesolvers.solverslib.command.FunctionalCommand;
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.command.button.Trigger;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.Commands.FollowPathCommand;
+import org.firstinspires.ftc.teamcode.Commands.ShootCommand;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveTrainSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.IndexerSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.LimelightSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 
 import java.util.List;
 
 @TeleOp
 public class TeleOPMode extends CommandOpMode {
 
+    private int newTagId = 0;
+
     @Override
     public void initialize() {
         int lastTagId = 0;
 
         DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(hardwareMap, telemetry);
-        LimelightSubsystem sensorSubsystem = new LimelightSubsystem(hardwareMap, telemetry);
+        LimelightSubsystem limelightSubsystem = new LimelightSubsystem(hardwareMap, telemetry, newTagId);
         IntakeSubsystem intakeSubsystem = new IntakeSubsystem(hardwareMap);
+        IndexerSubsystem indexerSubsystem = new IndexerSubsystem(hardwareMap);
+        TurretSubsystem turretSubsystem = new TurretSubsystem(hardwareMap, limelightSubsystem);
 
-        sensorSubsystem.startLimelight();
-        LLResult result = sensorSubsystem.getLatestResult();
-        Pose3D pose = result.getBotpose();
-
+        limelightSubsystem.startLimelight();
+        LLResult result = limelightSubsystem.getLatestResult();
         List<LLResultTypes.FiducialResult> apriltagResult = result.getFiducialResults();
-        telemetry.addData("tx", result.getTx());
-        telemetry.addData("ty", result.getTy());
-        telemetry.addData("Status", "Running");
 
-        int newTagId = lastTagId;
+        newTagId = lastTagId;
         for (LLResultTypes.FiducialResult detection : apriltagResult) {
             if (detection.getFiducialId() >= 21 && detection.getFiducialId() <= 23) {
                 newTagId = detection.getFiducialId();
@@ -55,8 +56,11 @@ public class TeleOPMode extends CommandOpMode {
                 .setTangentHeadingInterpolation()
                         .build();
 
-
-        register(driveTrainSubsystem, sensorSubsystem);
+        register(driveTrainSubsystem,
+                limelightSubsystem,
+                indexerSubsystem,
+                intakeSubsystem,
+                turretSubsystem);
 
         FollowPathCommand followPathCommand =
                 new FollowPathCommand(startPose, path, driveTrainSubsystem)
@@ -83,12 +87,12 @@ public class TeleOPMode extends CommandOpMode {
 
         new Trigger(() -> gamepad1.right_bumper).whenActive(intakeCommand);
 
-        new Trigger(() -> gamepad1.x).whenActive(resetPositionCommand);
-
         new Trigger(() -> gamepad1.left_bumper).whenActive(stopIntakeCommand);
 
+        new Trigger(() -> gamepad1.x).whenActive(resetPositionCommand);
+
         new Trigger(() -> gamepad1.right_trigger > 0.1).whileActiveContinuous(
-                 followPathCommand);
+                 new ShootCommand(indexerSubsystem, limelightSubsystem, turretSubsystem));
 
         driveTrainSubsystem.setDefaultCommand(teleopDriveCommand);
 

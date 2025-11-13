@@ -10,10 +10,14 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class LimelightSubsystem extends SubsystemBase {
 
     private final Limelight3A limelight;
+    private final Telemetry telemetry;
+    private final int newTagId;
 
-    public LimelightSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
+    public LimelightSubsystem(HardwareMap hardwareMap, Telemetry telemetry, int newTagId) {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         limelight.pipelineSwitch(0);
+        this.telemetry = telemetry;
+        this.newTagId = newTagId;
     }
 
     public void startLimelight() {
@@ -36,7 +40,12 @@ public class LimelightSubsystem extends SubsystemBase {
         return "None";
     }
 
+    public boolean hasValidTarget() {
+        LLResult result = limelight.getLatestResult();
+        return result != null && result.isValid();
+    }
+
     public void periodic() {
-        telemetry.addData("Motif", sensorSubsystem.getMotif(newTagId));
+        telemetry.addData("Motif", getMotif(newTagId));
     }
 }
