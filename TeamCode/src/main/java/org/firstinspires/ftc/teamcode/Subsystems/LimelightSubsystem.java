@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
-
+/*
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -49,3 +49,5 @@ public class LimelightSubsystem extends SubsystemBase {
         telemetry.addData("Motif", getMotif(newTagId));
     }
 }
+
+ */

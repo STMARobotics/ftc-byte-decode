@@ -5,15 +5,11 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
-import com.seattlesolvers.solverslib.command.FunctionalCommand;
-import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.RunCommand;
-import com.seattlesolvers.solverslib.command.button.Trigger;
+
 import org.firstinspires.ftc.teamcode.Commands.FollowPathCommand;
-import org.firstinspires.ftc.teamcode.Commands.IntakeCommand;
-import org.firstinspires.ftc.teamcode.Commands.ShootCommand;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveTrainSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.IndexerSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
@@ -22,8 +18,8 @@ import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 
 import java.util.List;
 
-@TeleOp
-public class TeleOPMode extends CommandOpMode {
+@Autonomous
+public class RGAutoOPMode extends CommandOpMode {
 
     private int newTagId = 0;
 
@@ -32,15 +28,15 @@ public class TeleOPMode extends CommandOpMode {
         int lastTagId = 0;
 
         DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(hardwareMap, telemetry);
-//        LimelightSubsystem limelightSubsystem = new LimelightSubsystem(hardwareMap, telemetry, newTagId);
+ //       LimelightSubsystem limelightSubsystem = new LimelightSubsystem(hardwareMap, telemetry, newTagId);
         IntakeSubsystem intakeSubsystem = new IntakeSubsystem(hardwareMap);
         IndexerSubsystem indexerSubsystem = new IndexerSubsystem(hardwareMap);
         TurretSubsystem turretSubsystem = new TurretSubsystem(hardwareMap);
 
-//        limelightSubsystem.startLimelight();
-//        LLResult result = limelightSubsystem.getLatestResult();
-//        List<LLResultTypes.FiducialResult> apriltagResult = result.getFiducialResults();
-/*
+        /*      limelightSubsystem.startLimelight();
+        LLResult result = limelightSubsystem.getLatestResult();
+        List<LLResultTypes.FiducialResult> apriltagResult = result.getFiducialResults();
+
         newTagId = lastTagId;
         for (LLResultTypes.FiducialResult detection : apriltagResult) {
             if (detection.getFiducialId() >= 21 && detection.getFiducialId() <= 23) {
@@ -50,9 +46,8 @@ public class TeleOPMode extends CommandOpMode {
         }
 
 
- */
-        Pose startPose = new Pose(60, 8.000, Math.toRadians(90));
-
+         */
+        Pose startPose = new Pose(60, 9.000, Math.toRadians(90));
         PathChain path = driveTrainSubsystem.pathBuilder()
                 .addPath(
                         // Path 1
@@ -102,7 +97,7 @@ public class TeleOPMode extends CommandOpMode {
                 .build();
 
         register(driveTrainSubsystem,
-                //limelightSubsystem,
+         //       limelightSubsystem,
                 indexerSubsystem,
                 intakeSubsystem,
                 turretSubsystem);
@@ -111,49 +106,16 @@ public class TeleOPMode extends CommandOpMode {
                 new FollowPathCommand(startPose, path, driveTrainSubsystem)
                         .withGlobalMaxPower(0.5);
 
-        FunctionalCommand teleopDriveCommand = new FunctionalCommand(driveTrainSubsystem::startTeleop,
-                () -> driveTrainSubsystem.drive(
-                        -gamepad1.left_stick_y,
-                        -gamepad1.left_stick_x,
-                        -gamepad1.right_stick_x,
-                        1),
-                (b) -> driveTrainSubsystem.stopDrivetrain(),
-                () -> false,
-                driveTrainSubsystem);
-
-        InstantCommand resetPositionCommand =
-                new InstantCommand(driveTrainSubsystem::resetLocalization, driveTrainSubsystem);
-
-//        new Trigger(() -> gamepad1.x).whenActive(resetPositionCommand);
-
-//        new Trigger(() -> gamepad1.a).toggleWhenActive(new IntakeCommand(intakeSubsystem, indexerSubsystem));
-
-/*        new Trigger(() -> gamepad1.right_trigger > 0.1).whileActiveContinuous(
-                 new ShootCommand(indexerSubsystem, limelightSubsystem, turretSubsystem));
-
-
- */
 
         RunCommand intakeCommand =
-                new RunCommand(intakeSubsystem::runIntakeMotor, intakeSubsystem);
+                new RunCommand(intakeSubsystem::runIntakeMotor);
 
-        RunCommand indexBeltCommand =
-                new RunCommand(indexerSubsystem::runBelt, indexerSubsystem);
-
-        RunCommand indexWheelCommand =
-                new RunCommand(indexerSubsystem::runWheel, indexerSubsystem);
-
-
-        new Trigger(() -> gamepad1.b).toggleWhenActive(intakeCommand);
-
-        new Trigger(() -> gamepad1.a).toggleWhenActive(indexBeltCommand);
-
-        new Trigger(() -> gamepad1.x).toggleWhenActive(indexWheelCommand);
-
-        driveTrainSubsystem.setDefaultCommand(teleopDriveCommand);
+        RunCommand stopIntakeCommand =
+                new RunCommand(intakeSubsystem::stop);
 
         new RunCommand(() ->
                 telemetry.addData("isScheduled", followPathCommand.isScheduled())).schedule();
         new RunCommand(telemetry::update).schedule();
     }
+
 }

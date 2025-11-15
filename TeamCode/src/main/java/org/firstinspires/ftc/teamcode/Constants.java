@@ -29,12 +29,19 @@ public final class Constants {
 
     public static final class IntakeConstants {
         public static final String INTAKE_MOTOR_NAME = "intakeMotor";
+        public static final String INTAKE_SENSOR_NAME = "intakeDistanceSensor";
         public static final double INTAKE_SPEED = 1; // percent of power applied from 0 < speed < 1
+        public static final double INTAKE_SENSOR_DISTANCE = 1.0; // inches
     }
 
     public static final class IndexerConstants {
-        public static final String LEFT_INDEXER_MOTOR_NAME = "LeftIndexerMotor";
-        public static final String RIGHT_INDEXER_MOTOR_NAME = "RightIndexerMotor";
-        public static final double INDEXING_SPEED = 1; // percent of power applied from 0 < speed < 1
+        public static final String WHEEL_INDEXER_MOTOR_NAME = "wheelIndexerMotor";
+        public static final String BELT_INDEXER_MOTOR_NAME = "beltIndexerMotor";
+        public static final String WHEEL_SENSOR_NAME = "wheelDistanceSensor";
+        public static final String BELT_SENSOR_NAME = "beltDistanceSensor";
+        public static final double WHEEL_SENSOR_DISTANCE = 1.0; // inches
+        public static final double BELT_SENSOR_DISTANCE = 1.0; // inches
+        public static final double BELT_INDEXING_SPEED = 1.0; // percent of power applied from 0 < speed < 1
+        public static final double WHEEL_INDEXING_SPEED = 1.0; // percent of power applied from 0 < speed < 1
     }
 }
