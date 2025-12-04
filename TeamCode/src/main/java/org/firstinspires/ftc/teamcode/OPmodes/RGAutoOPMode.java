@@ -29,9 +29,9 @@ public class RGAutoOPMode extends CommandOpMode {
 
         DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(hardwareMap, telemetry);
  //       LimelightSubsystem limelightSubsystem = new LimelightSubsystem(hardwareMap, telemetry, newTagId);
-        IntakeSubsystem intakeSubsystem = new IntakeSubsystem(hardwareMap);
-        IndexerSubsystem indexerSubsystem = new IndexerSubsystem(hardwareMap);
-        TurretSubsystem turretSubsystem = new TurretSubsystem(hardwareMap);
+        IntakeSubsystem intakeSubsystem = new IntakeSubsystem(hardwareMap, telemetry);
+        IndexerSubsystem indexerSubsystem = new IndexerSubsystem(hardwareMap, telemetry);
+        TurretSubsystem turretSubsystem = new TurretSubsystem(hardwareMap, telemetry);
 
         /*      limelightSubsystem.startLimelight();
         LLResult result = limelightSubsystem.getLatestResult();

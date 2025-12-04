@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
+import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.SHOOTING_SPEED;
 import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.SHOOTING_TIME;
 import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.TURRET_DEGREE_TOLERANCE;
 import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.TURRET_KD;
@@ -13,24 +14,32 @@ import com.seattlesolvers.solverslib.command.CommandBase;
 import com.seattlesolvers.solverslib.controller.wpilibcontroller.ProfiledPIDController;
 import com.seattlesolvers.solverslib.trajectory.TrapezoidProfile;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Subsystems.IndexerSubsystem;
-//import org.firstinspires.ftc.teamcode.Subsystems.LimelightSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.LimelightSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.ShooterSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 
 public class ShootCommand extends CommandBase {
 
     private final IndexerSubsystem indexerSubsystem;
- //   private final LimelightSubsystem limelightSubsystem;
+    private final LimelightSubsystem limelightSubsystem;
     private final TurretSubsystem turretSubsystem;
+    private final ShooterSubsystem shooterSubsystem;
+    private final Telemetry telemetry;
 
     public ShootCommand(IndexerSubsystem indexerSubsystem,
- //                       LimelightSubsystem limelightSubsystem,
-                        TurretSubsystem turretSubsystem) {
+                        LimelightSubsystem limelightSubsystem,
+                        TurretSubsystem turretSubsystem,
+                        ShooterSubsystem shooterSubsystem,
+                        Telemetry telemetry) {
         this.indexerSubsystem = indexerSubsystem;
- //       this.limelightSubsystem = limelightSubsystem;
+        this.limelightSubsystem = limelightSubsystem;
         this.turretSubsystem = turretSubsystem;
+        this.shooterSubsystem = shooterSubsystem;
+        this.telemetry = telemetry;
 
-        addRequirements(indexerSubsystem, turretSubsystem);
+        addRequirements(indexerSubsystem, turretSubsystem, limelightSubsystem, shooterSubsystem);
     }
 
     enum ShootingState {
@@ -51,29 +60,38 @@ public class ShootCommand extends CommandBase {
         pid.setTolerance(TURRET_DEGREE_TOLERANCE);
     }
 
+    @Override
     public void execute() {
-  /*      if (!limelightSubsystem.hasValidTarget()) {
+        double tx = 0;
+        if (!limelightSubsystem.hasValidTarget()) {
             turretSubsystem.stopTurret();
+        } else {
+            LLResult result = limelightSubsystem.getLatestResult();
+            tx = result.getTx();
+
+            double pidOutput = pid.calculate(tx, 0);
+
+            if (turretSubsystem.getTurretPosition() <= TURRET_MIN_DEGREE && pidOutput < 0 ||
+                    turretSubsystem.getTurretPosition() >= TURRET_MAX_DEGREE && pidOutput > 0) {
+                pidOutput = 0;
+            }
+
+            turretSubsystem.setTurretPower(pidOutput);
         }
-
-        LLResult result = limelightSubsystem.getLatestResult();
-        double tx = result.getTx();
-
-
-   */
-        double pidOutput = pid.calculate(1, 0);
-
-        if (turretSubsystem.getTurretPosition() <= TURRET_MIN_DEGREE && pidOutput < 0 ||
-                turretSubsystem.getTurretPosition() >= TURRET_MAX_DEGREE && pidOutput > 0) {
-            pidOutput = 0;
-        }
-
-        turretSubsystem.setTurretPower(pidOutput);
 
         switch (shootingState) {
             case PREPARE:
-                turretSubsystem.shoot();
-                if (turretSubsystem.isReadyToShoot() && Math.abs(1) <= TURRET_DEGREE_TOLERANCE) {
+                shooterSubsystem.startShooting();
+                /*
+                telemetry.addData("velocity1", shooterSubsystem.getShooter1Velocity());
+                telemetry.addData("velocity2", shooterSubsystem.getShooter2Velocity());
+                telemetry.addData("tx", tx);
+                telemetry.addData("isReadyToShoot", shooterSubsystem.isReadyToShoot());
+                telemetry.addData("isInTolerance", Math.abs(tx) <= TURRET_DEGREE_TOLERANCE);
+                telemetry.addData("number", Math.abs(shooterSubsystem.getShooter1Velocity()) - SHOOTING_SPEED);
+                telemetry.addData("number2", Math.abs(shooterSubsystem.getShooter2Velocity()) - SHOOTING_SPEED);
+                 */
+                if (shooterSubsystem.isReadyToShoot() && Math.abs(tx) <= TURRET_DEGREE_TOLERANCE) {
                     shootingState = ShootingState.SHOOT;
                 }
                 break;
@@ -86,6 +104,8 @@ public class ShootCommand extends CommandBase {
                 }
                 break;
         }
+//        telemetry.addData("ShootingState", shootingState);
+
     }
 
     public boolean isFinished() {
@@ -93,7 +113,7 @@ public class ShootCommand extends CommandBase {
     }
 
     public void end(boolean interrupted) {
-        turretSubsystem.stopShooter();
         turretSubsystem.stopTurret();
+        indexerSubsystem.stopWheel();
     }
 }

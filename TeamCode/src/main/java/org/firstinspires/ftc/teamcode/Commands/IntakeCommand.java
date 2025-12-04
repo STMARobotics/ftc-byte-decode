@@ -18,19 +18,19 @@ public class IntakeCommand extends CommandBase {
     }
 
     public void execute() {
-        if (intakeSubsystem.isSensorTripped() /*indexerSubsystem.isBeltSensorTripped() */ && intakeSubsystem.isSensorTripped()) {
+        if (intakeSubsystem.isSensorTripped() && indexerSubsystem.isBeltSensorTripped() && indexerSubsystem.isWheelSensorTripped()) {
             intakeSubsystem.stop();
         } else {
             intakeSubsystem.runIntakeMotor();
         }
 
-        if (/*indexerSubsystem.isBeltSensorTripped() && */intakeSubsystem.isSensorTripped()) {
+        if (indexerSubsystem.isBeltSensorTripped() && indexerSubsystem.isWheelSensorTripped()) {
             indexerSubsystem.stopBelt();
         } else {
             indexerSubsystem.runBelt();
         }
 
-        if (true) {
+        if (indexerSubsystem.isWheelSensorTripped()) {
             indexerSubsystem.stopWheel();
         } else {
             indexerSubsystem.runWheel();

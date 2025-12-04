@@ -58,8 +58,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
     public void periodic() {
         follower.update();
         currentPose = follower.getPose();
-        telemetry.addData("X coordinate (meters)", currentPose.getX());
-        telemetry.addData("Y coordinate (meters)", currentPose.getY());
+        telemetry.addData("X coordinate (inches)", currentPose.getX());
+        telemetry.addData("Y coordinate (inches)", currentPose.getY());
         telemetry.addData("Heading angle (radians)", currentPose.getHeading());
     }
 

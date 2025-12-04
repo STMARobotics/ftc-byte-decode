@@ -12,7 +12,7 @@ public final class Constants {
 
     public static final class SensorConstants {
         public static final String SPARKFUN_OTOS_NAME = "Odometry Device";
-        public static final SparkFunOTOS.Pose2D OTOS_OFFSET = new SparkFunOTOS.Pose2D(0.09, -0.16, Math.PI/2);
+        public static final SparkFunOTOS.Pose2D OTOS_OFFSET = new SparkFunOTOS.Pose2D(0.09, -0.16, -Math.PI/2);
     }
 
     public static final class TurretConstants {
@@ -22,9 +22,9 @@ public final class Constants {
         public static final double TURRET_MIN_DEGREE = -145.0;
         public static final double POTENTIOMETER_MIN_VOLTAGE = 0.9;
         public static final double POTENTIOMETER_MAX_VOLTAGE = 1.8;
-        public static final double TURRET_KP = 0.028;
-        public static final double TURRET_KD = 0.004;
-        public static final double TURRET_DEGREE_TOLERANCE = 2;
+        public static final double TURRET_KP = 0.025;
+        public static final double TURRET_KD = 0.0;
+        public static final double TURRET_DEGREE_TOLERANCE = 1;
     }
 
     public static final class IntakeConstants {
@@ -39,8 +39,8 @@ public final class Constants {
         public static final String BELT_INDEXER_MOTOR_NAME = "beltIndexerMotor";
         public static final String WHEEL_SENSOR_NAME = "wheelDistanceSensor";
         public static final String BELT_SENSOR_NAME = "beltDistanceSensor";
-        public static final double WHEEL_SENSOR_DISTANCE = 1.0; // inches
-        public static final double BELT_SENSOR_DISTANCE = 1.0; // inches
+        public static final double WHEEL_SENSOR_DISTANCE = 2.0; // inches
+        public static final double BELT_SENSOR_DISTANCE = 4.0; // inches
         public static final double BELT_INDEXING_SPEED = 1.0; // percent of power applied from 0 < speed < 1
         public static final double WHEEL_INDEXING_SPEED = 1.0; // percent of power applied from 0 < speed < 1
     }
