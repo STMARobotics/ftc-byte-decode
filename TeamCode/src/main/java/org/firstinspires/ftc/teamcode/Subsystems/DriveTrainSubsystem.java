@@ -26,7 +26,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
         // Square and reduce the axes
         double modifiedY = square(translationY * clampedReduction);
         double modifiedX = square(translationX * clampedReduction);
-        double modifiedRotation = square(rotation * clampedReduction);
+        double modifiedRotation = square(rotation * clampedReduction * .7);
 
         follower.setTeleOpDrive(modifiedX, modifiedY, modifiedRotation, false);
     }

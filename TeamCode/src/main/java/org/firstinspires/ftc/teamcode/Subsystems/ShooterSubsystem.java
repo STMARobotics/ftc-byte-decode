@@ -17,11 +17,14 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterMotor1 = hardwareMap.get(DcMotorEx.class, "shooterMotor1");
         shooterMotor2 = hardwareMap.get(DcMotorEx.class, "shooterMotor2");
         shooterMotor1.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        shooterMotor1.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+        shooterMotor2.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
     }
 
-    public void startShooting() {
-        shooterMotor1.setVelocity(SHOOTING_SPEED);
-        shooterMotor2.setVelocity(SHOOTING_SPEED);
+    public void startShooting(double speed) {
+        shooterMotor1.setVelocity(speed);
+        shooterMotor2.setVelocity(speed);
     }
 
     public void stopShooter() {
@@ -29,8 +32,8 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterMotor2.setVelocity(0);
     }
 
-    public boolean isReadyToShoot() {
-        return (Math.abs(Math.abs(shooterMotor1.getVelocity()) - SHOOTING_SPEED) < 300);
+    public boolean isReadyToShoot(double speed) {
+        return (Math.abs(Math.abs(shooterMotor1.getVelocity()) - speed) < 300);
     }
 
     public double getShooter1Velocity() {

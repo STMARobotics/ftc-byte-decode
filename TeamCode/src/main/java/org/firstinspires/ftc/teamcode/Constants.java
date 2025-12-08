@@ -1,12 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
+import org.firstinspires.ftc.teamcode.Math.LookupTableMath;
+
+
 
 public final class Constants {
     public static final class DriveTrainConstants {
         public static final String FRONT_RIGHT_MOTOR_NAME = "frontRight";
         public static final String FRONT_LEFT_MOTOR_NAME = "frontLeft";
-        public static final String BACK_RIGHT_MOTOR_NAME = "backRight";
+        public static final String BACK_RIGHT_MOTOR_NAME = "backRight"; // port 2
         public static final String BACK_LEFT_MOTOR_NAME = "backLeft";
     }
 
@@ -16,22 +19,22 @@ public final class Constants {
     }
 
     public static final class TurretConstants {
-        public static final int SHOOTING_SPEED = 1300;
+        public static final int SHOOTING_SPEED = 1900;
         public static final double SHOOTING_TIME = 0.2;
         public static final double TURRET_MAX_DEGREE = 145.0;
         public static final double TURRET_MIN_DEGREE = -145.0;
         public static final double POTENTIOMETER_MIN_VOLTAGE = 0.9;
         public static final double POTENTIOMETER_MAX_VOLTAGE = 1.8;
-        public static final double TURRET_KP = 0.025;
+        public static final double TURRET_KP = 0.02;
         public static final double TURRET_KD = 0.0;
-        public static final double TURRET_DEGREE_TOLERANCE = 1;
+        public static final double TURRET_DEGREE_TOLERANCE = 4;
     }
 
     public static final class IntakeConstants {
         public static final String INTAKE_MOTOR_NAME = "intakeMotor";
         public static final String INTAKE_SENSOR_NAME = "intakeDistanceSensor";
         public static final double INTAKE_SPEED = 1; // percent of power applied from 0 < speed < 1
-        public static final double INTAKE_SENSOR_DISTANCE = 1.0; // inches
+        public static final double INTAKE_SENSOR_DISTANCE = 6.0; // inches
     }
 
     public static final class IndexerConstants {
@@ -39,9 +42,18 @@ public final class Constants {
         public static final String BELT_INDEXER_MOTOR_NAME = "beltIndexerMotor";
         public static final String WHEEL_SENSOR_NAME = "wheelDistanceSensor";
         public static final String BELT_SENSOR_NAME = "beltDistanceSensor";
-        public static final double WHEEL_SENSOR_DISTANCE = 2.0; // inches
-        public static final double BELT_SENSOR_DISTANCE = 4.0; // inches
+        public static final double WHEEL_SENSOR_DISTANCE = 3.2; // inches
+        public static final double BELT_SENSOR_DISTANCE = 7.0; // inches
         public static final double BELT_INDEXING_SPEED = 1.0; // percent of power applied from 0 < speed < 1
         public static final double WHEEL_INDEXING_SPEED = 1.0; // percent of power applied from 0 < speed < 1
     }
+
+    public static final LookupTableMath INTERPOLATOR = new LookupTableMath()
+            .addEntry(5.7, 1500)
+            .addEntry(-1.6, 3000)
+            .addEntry(-5.4, 4000)
+            .addEntry(-5.0, 3400)
+            .addEntry(-8.54, 3600)
+            .addEntry(-12.7, 4200)
+            .addEntry(-13.0, 5800);
 }

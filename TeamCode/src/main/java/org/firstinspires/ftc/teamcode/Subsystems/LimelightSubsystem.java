@@ -45,8 +45,17 @@ public class LimelightSubsystem extends SubsystemBase {
         return result != null && result.isValid();
     }
 
+    public double getDistance() {
+        LLResult result = limelight.getLatestResult();
+        if (result == null || !result.isValid()) {
+            return Double.NaN;
+        }
+        return result.getTy();
+    }
+
     public void periodic() {
         LLResult result = limelight.getLatestResult();
         telemetry.addData("Has Target", (result != null && result.isValid()));
+        telemetry.addData("ty", limelight.getLatestResult().getTy());
     }
 }

@@ -44,6 +44,6 @@ public class IntakeSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        telemetry.addData("Intake Sensor", distanceSensor.getDistance(DistanceUnit.INCH));
+//        telemetry.addData("Intake Sensor", distanceSensor.getDistance(DistanceUnit.INCH));
     }
 }

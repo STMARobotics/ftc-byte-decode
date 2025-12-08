@@ -24,7 +24,7 @@ public class TurretSubsystem extends SubsystemBase {
 
     public TurretSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
-        turretServo = hardwareMap.get(CRServo.class, "turretServo");
+        turretServo = hardwareMap.get(CRServo.class, "turretServo"); // port 3
         potentiometer = hardwareMap.get(AnalogInput.class, "potentiometer");
     }
 

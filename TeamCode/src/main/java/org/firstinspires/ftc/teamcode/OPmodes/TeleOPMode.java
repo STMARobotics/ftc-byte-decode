@@ -130,8 +130,14 @@ public class TeleOPMode extends CommandOpMode {
         InstantCommand resetPositionCommand =
                 new InstantCommand(driveTrainSubsystem::resetLocalization, driveTrainSubsystem);
 
-        new Trigger(() -> gamepad1.right_trigger > 0.1).whileActiveContinuous(
-                 new ShootCommand(indexerSubsystem, limelightSubsystem, turretSubsystem, shooterSubsystem, telemetry));
+        new Trigger(() -> gamepad1.right_trigger > 0.1).toggleWhenActive(
+                 new ShootCommand(
+                         indexerSubsystem,
+                         limelightSubsystem,
+                         turretSubsystem,
+                         shooterSubsystem,
+                         intakeSubsystem,
+                         telemetry));
 
         RunCommand intakeCommand =
                 new RunCommand(intakeSubsystem::runIntakeMotor, intakeSubsystem);
@@ -143,6 +149,7 @@ public class TeleOPMode extends CommandOpMode {
                 new RunCommand(indexerSubsystem::runWheel, indexerSubsystem);
 
         LockTurretCommand lockTurretCommand = new LockTurretCommand(limelightSubsystem, turretSubsystem, telemetry);
+
 
         new Trigger(() -> gamepad1.y).toggleWhenActive(lockTurretCommand);
 

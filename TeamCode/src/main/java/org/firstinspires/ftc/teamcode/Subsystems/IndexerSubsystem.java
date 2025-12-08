@@ -25,7 +25,7 @@ public class IndexerSubsystem extends SubsystemBase {
     private final CRServo wheelIndexerServo;
     private final CRServo beltIndexerServo;
     private final ColorRangeSensor wheelDistanceSensor;
-    private final ColorRangeSensor beltDistanceSensor;
+    private final DistanceSensor beltDistanceSensor;
     private final Telemetry telemetry;
 
     public IndexerSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -34,7 +34,7 @@ public class IndexerSubsystem extends SubsystemBase {
         beltIndexerServo = hardwareMap.get(CRServo.class, BELT_INDEXER_MOTOR_NAME);
         beltIndexerServo.setDirection(DcMotorSimple.Direction.REVERSE);
         wheelDistanceSensor = hardwareMap.get(ColorRangeSensor.class, WHEEL_SENSOR_NAME);
-        beltDistanceSensor = hardwareMap.get(ColorRangeSensor.class, BELT_SENSOR_NAME);
+        beltDistanceSensor = hardwareMap.get(DistanceSensor.class, BELT_SENSOR_NAME);
     }
 
     public boolean isWheelSensorTripped() {
@@ -67,7 +67,7 @@ public class IndexerSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        telemetry.addData("belt distance sensor", beltDistanceSensor.getDistance(DistanceUnit.INCH));
-        telemetry.addData("wheel distance sensor", wheelDistanceSensor.getDistance(DistanceUnit.INCH));
+//        telemetry.addData("belt distance sensor", beltDistanceSensor.getDistance(DistanceUnit.INCH));
+//        telemetry.addData("wheel distance sensor", wheelDistanceSensor.getDistance(DistanceUnit.INCH));
     }
 }
