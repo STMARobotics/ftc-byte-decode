@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
-import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.SHOOTING_SPEED;
-
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -17,6 +17,15 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterMotor1 = hardwareMap.get(DcMotorEx.class, "shooterMotor1");
         shooterMotor2 = hardwareMap.get(DcMotorEx.class, "shooterMotor2");
         shooterMotor1.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        PIDFCoefficients pid = new PIDFCoefficients();
+        pid.p = 500;
+        pid.i = 0;
+        pid.d = 0;
+        pid.f = 17;
+
+        shooterMotor1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pid);
+        shooterMotor2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pid);
 
         shooterMotor1.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
         shooterMotor2.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
@@ -33,7 +42,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public boolean isReadyToShoot(double speed) {
-        return (Math.abs(Math.abs(shooterMotor1.getVelocity()) - speed) < 300);
+        return (Math.abs(Math.abs(shooterMotor1.getVelocity()) - speed) / 2 < 50);
     }
 
     public double getShooter1Velocity() {

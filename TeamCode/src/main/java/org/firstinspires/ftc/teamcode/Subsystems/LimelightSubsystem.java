@@ -1,23 +1,30 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+import java.util.List;
+import java.util.Objects;
+
 public class LimelightSubsystem extends SubsystemBase {
 
     private final Limelight3A limelight;
     private final Telemetry telemetry;
-    private final int newTagId;
 
-    public LimelightSubsystem(HardwareMap hardwareMap, Telemetry telemetry, int newTagId) {
+    public LimelightSubsystem(HardwareMap hardwareMap, Telemetry telemetry, String team) {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
-        limelight.pipelineSwitch(0);
+        if (Objects.equals(team, "blue")) {
+            limelight.pipelineSwitch(0);
+        } else {
+            limelight.pipelineSwitch(1);
+        }
+
         this.telemetry = telemetry;
-        this.newTagId = newTagId;
     }
 
     public void startLimelight() {
@@ -26,18 +33,6 @@ public class LimelightSubsystem extends SubsystemBase {
 
     public LLResult getLatestResult() {
         return limelight.getLatestResult();
-    }
-
-    public String getMotif(int tag) {
-        switch(tag) {
-            case 21:
-                return "GPP";
-            case 22:
-                return "PGP";
-            case 23:
-                return "PPG";
-        }
-        return "None";
     }
 
     public boolean hasValidTarget() {
@@ -55,7 +50,7 @@ public class LimelightSubsystem extends SubsystemBase {
 
     public void periodic() {
         LLResult result = limelight.getLatestResult();
-        telemetry.addData("Has Target", (result != null && result.isValid()));
+//        telemetry.addData("Has Target", (result != null && result.isValid()));
         telemetry.addData("ty", limelight.getLatestResult().getTy());
     }
 }

@@ -22,9 +22,9 @@ import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ShootCommand extends CommandBase {
+public class AutoShootCommand extends CommandBase {
 
-    private static final Logger log = LoggerFactory.getLogger(ShootCommand.class);
+    private static final Logger log = LoggerFactory.getLogger(AutoShootCommand.class);
     private final IndexerSubsystem indexerSubsystem;
     private final LimelightSubsystem limelightSubsystem;
     private final TurretSubsystem turretSubsystem;
@@ -32,12 +32,12 @@ public class ShootCommand extends CommandBase {
     private final IntakeSubsystem intakeSubsystem;
     private final Telemetry telemetry;
 
-    public ShootCommand(IndexerSubsystem indexerSubsystem,
-                        LimelightSubsystem limelightSubsystem,
-                        TurretSubsystem turretSubsystem,
-                        ShooterSubsystem shooterSubsystem,
-                        IntakeSubsystem intakeSubsystem,
-                        Telemetry telemetry) {
+    public AutoShootCommand(IndexerSubsystem indexerSubsystem,
+                            LimelightSubsystem limelightSubsystem,
+                            TurretSubsystem turretSubsystem,
+                            ShooterSubsystem shooterSubsystem,
+                            IntakeSubsystem intakeSubsystem,
+                            Telemetry telemetry) {
         this.indexerSubsystem = indexerSubsystem;
         this.limelightSubsystem = limelightSubsystem;
         this.turretSubsystem = turretSubsystem;
@@ -56,15 +56,19 @@ public class ShootCommand extends CommandBase {
 
     private ShootingState shootingState;
     private ElapsedTime timer = new ElapsedTime();
+    private ElapsedTime timer2 = new ElapsedTime();
     private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
     private final ProfiledPIDController pid = new ProfiledPIDController(TURRET_KP, 0.0, TURRET_KD, constraints);
     double tx = 0;
+    private double shot = 0;
 
     @Override
     public void initialize() {
         shootingState = ShootingState.PREPARE;
         timer.reset();
+        timer2.reset();
         pid.setTolerance(TURRET_DEGREE_TOLERANCE);
+        shot = 0;
     }
 
     @Override
@@ -93,10 +97,9 @@ public class ShootCommand extends CommandBase {
         telemetry.addData("velocity2", shooterSubsystem.getShooter2Velocity() /28*60);
         telemetry.addData("target", lookupRPM);
         telemetry.addData("tx", tx);
+        telemetry.addData("shot", shot);
         if (!limelightSubsystem.hasValidTarget()) {
             turretSubsystem.stopTurret();
-            indexerSubsystem.stopWheel();
-            indexerSubsystem.stopBelt();
         } else {
             try {
                 LLResult result = limelightSubsystem.getLatestResult();
@@ -113,25 +116,24 @@ public class ShootCommand extends CommandBase {
         switch (shootingState) {
             case PREPARE:
                 shooterSubsystem.startShooting(lookupRPM);
-                if (shooterSubsystem.isReadyToShoot(lookupRPM) && Math.abs(tx) <= TURRET_DEGREE_TOLERANCE) {
+                if (shooterSubsystem.isReadyToShoot(lookupRPM) && Math.abs(tx) <= TURRET_DEGREE_TOLERANCE && timer.seconds() > SHOOTING_TIME) {
                     shootingState = ShootingState.SHOOT;
+                    timer.reset();
                 }
                 break;
             case SHOOT:
                 indexerSubsystem.shoot();
-                timer.reset();
                 if (timer.seconds() > SHOOTING_TIME) {
-                    shootingState = ShootingState.END;
+                    shootingState = ShootingState.PREPARE;
                     timer.reset();
+                    shot += 1;
                 }
                 break;
         }
-//        telemetry.addData("ShootingState", shootingState);
-
     }
 
     public boolean isFinished() {
-        return (shootingState == ShootingState.END);
+        return (shot > 6);
     }
 
     public void end(boolean interrupted) {

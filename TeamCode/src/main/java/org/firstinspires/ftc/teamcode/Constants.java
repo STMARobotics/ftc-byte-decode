@@ -15,19 +15,18 @@ public final class Constants {
 
     public static final class SensorConstants {
         public static final String SPARKFUN_OTOS_NAME = "Odometry Device";
-        public static final SparkFunOTOS.Pose2D OTOS_OFFSET = new SparkFunOTOS.Pose2D(0.09, -0.16, -Math.PI/2);
+        public static final SparkFunOTOS.Pose2D OTOS_OFFSET = new SparkFunOTOS.Pose2D(0.875, 0, -Math.PI/2);
     }
 
     public static final class TurretConstants {
-        public static final int SHOOTING_SPEED = 1900;
-        public static final double SHOOTING_TIME = 0.2;
+        public static final double SHOOTING_TIME = 0.5;
         public static final double TURRET_MAX_DEGREE = 145.0;
         public static final double TURRET_MIN_DEGREE = -145.0;
         public static final double POTENTIOMETER_MIN_VOLTAGE = 0.9;
         public static final double POTENTIOMETER_MAX_VOLTAGE = 1.8;
         public static final double TURRET_KP = 0.02;
         public static final double TURRET_KD = 0.0;
-        public static final double TURRET_DEGREE_TOLERANCE = 4;
+        public static final double TURRET_DEGREE_TOLERANCE = 3;
     }
 
     public static final class IntakeConstants {
@@ -49,11 +48,12 @@ public final class Constants {
     }
 
     public static final LookupTableMath INTERPOLATOR = new LookupTableMath()
-            .addEntry(5.7, 1500)
-            .addEntry(-1.6, 3000)
-            .addEntry(-5.4, 4000)
-            .addEntry(-5.0, 3400)
-            .addEntry(-8.54, 3600)
-            .addEntry(-12.7, 4200)
-            .addEntry(-13.0, 5800);
-}
+            .addEntry(14.9, 1100)
+            .addEntry(4.9, 1100)
+            .addEntry(-1.2, 1100)
+            .addEntry(-5.0, 1200)
+            .addEntry(-8.54, 1200)
+            .addEntry(-9.6, 1250)
+            .addEntry(-10.6, 1352)
+            .addEntry(-13.5, 1490);
+    }

@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
-import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.SHOOTING_SPEED;
 import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.POTENTIOMETER_MAX_VOLTAGE;
 import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.POTENTIOMETER_MIN_VOLTAGE;
 import static org.firstinspires.ftc.teamcode.Constants.TurretConstants.TURRET_MAX_DEGREE;
@@ -45,7 +44,7 @@ public class TurretSubsystem extends SubsystemBase {
     public void periodic() {
         double voltage = Math.max(POTENTIOMETER_MIN_VOLTAGE, Math.min(potentiometer.getVoltage(), POTENTIOMETER_MAX_VOLTAGE));
         double fraction = (voltage - POTENTIOMETER_MIN_VOLTAGE) / (POTENTIOMETER_MAX_VOLTAGE - POTENTIOMETER_MIN_VOLTAGE);
-        telemetry.addData("getCurrent", fraction * (TURRET_MAX_DEGREE - TURRET_MIN_DEGREE) + TURRET_MIN_DEGREE);
+        //telemetry.addData("getCurrent", fraction * (TURRET_MAX_DEGREE - TURRET_MIN_DEGREE) + TURRET_MIN_DEGREE);
     }
 
 }
