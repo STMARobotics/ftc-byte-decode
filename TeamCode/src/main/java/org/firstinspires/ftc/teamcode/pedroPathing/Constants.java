@@ -33,7 +33,7 @@ public class Constants {
             .forwardZeroPowerAcceleration(-58.742)
             .lateralZeroPowerAcceleration(-82.934)
             .translationalPIDFCoefficients(new PIDFCoefficients(0.1, 0, 0.0, 0))
-            .headingPIDFCoefficients(new PIDFCoefficients(0.1, 0, 0.0, 0));
+            .headingPIDFCoefficients(new PIDFCoefficients(1.2, 0, 0.0, 0));
 
     public static MecanumConstants driveConstants = new MecanumConstants()
             .maxPower(1)
@@ -53,4 +53,5 @@ public class Constants {
             .linearUnit(DistanceUnit.INCH)
             .angleUnit(AngleUnit.RADIANS)
             .offset(SensorConstants.OTOS_OFFSET);
-}
+
+    }

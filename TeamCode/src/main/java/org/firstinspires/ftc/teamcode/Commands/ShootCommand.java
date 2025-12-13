@@ -112,9 +112,11 @@ public class ShootCommand extends CommandBase {
 
         switch (shootingState) {
             case PREPARE:
+                if (limelightSubsystem.hasValidTarget()) {
                 shooterSubsystem.startShooting(lookupRPM);
                 if (shooterSubsystem.isReadyToShoot(lookupRPM) && Math.abs(tx) <= TURRET_DEGREE_TOLERANCE) {
                     shootingState = ShootingState.SHOOT;
+                    }
                 }
                 break;
             case SHOOT:

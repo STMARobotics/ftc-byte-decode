@@ -12,6 +12,7 @@ import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.command.button.Trigger;
 
+import org.firstinspires.ftc.teamcode.Commands.EjectCommand;
 import org.firstinspires.ftc.teamcode.Commands.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.Commands.IntakeCommand;
 import org.firstinspires.ftc.teamcode.Commands.ShootCommand;
@@ -87,6 +88,12 @@ public class BlueTeleOPMode extends CommandOpMode {
         new Trigger(() -> gamepad1.back).toggleWhenActive(resetPositionCommand);
 
         new Trigger(() -> gamepad1.left_trigger > 0.1).toggleWhenActive(new IntakeCommand(intakeSubsystem, indexerSubsystem));
+
+        new Trigger(() -> gamepad1.a).toggleWhenActive(new EjectCommand(intakeSubsystem, indexerSubsystem));
+
+        new Trigger(() -> gamepad1.dpad_left).whileActiveContinuous(new RunCommand(() -> turretSubsystem.setTurretPower(1.0)));
+
+        new Trigger(() -> gamepad1.dpad_left).whileActiveContinuous(new RunCommand(() -> turretSubsystem.setTurretPower(-1.0)));
 
         driveTrainSubsystem.setDefaultCommand(teleopDriveCommand);
 

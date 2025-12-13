@@ -42,7 +42,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public boolean isReadyToShoot(double speed) {
-        return (Math.abs(Math.abs(shooterMotor1.getVelocity()) - speed) / 2 < 50);
+        return (Math.abs(Math.abs(shooterMotor1.getVelocity()) - speed) / 2 < 75);
     }
 
     public double getShooter1Velocity() {

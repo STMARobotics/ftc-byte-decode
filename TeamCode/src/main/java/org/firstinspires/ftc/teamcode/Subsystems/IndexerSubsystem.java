@@ -49,8 +49,16 @@ public class IndexerSubsystem extends SubsystemBase {
         beltIndexerServo.setPower(BELT_INDEXING_SPEED);
     }
 
+    public void reverseBelt() {
+        beltIndexerServo.setPower(-BELT_INDEXING_SPEED);
+    }
+
     public void runWheel() {
-        wheelIndexerServo.setPower(1);
+        wheelIndexerServo.setPower(WHEEL_INDEXING_SPEED);
+    }
+
+    public void reverseWheel() {
+        wheelIndexerServo.setPower(-WHEEL_INDEXING_SPEED);
     }
 
     public void shoot() {

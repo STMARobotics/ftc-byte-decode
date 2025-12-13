@@ -26,7 +26,7 @@ public final class Constants {
         public static final double POTENTIOMETER_MAX_VOLTAGE = 1.8;
         public static final double TURRET_KP = 0.02;
         public static final double TURRET_KD = 0.0;
-        public static final double TURRET_DEGREE_TOLERANCE = 3;
+        public static final double TURRET_DEGREE_TOLERANCE = 2.5;
     }
 
     public static final class IntakeConstants {

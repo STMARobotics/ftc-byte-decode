@@ -60,7 +60,6 @@ public class AutoShootCommand extends CommandBase {
     private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
     private final ProfiledPIDController pid = new ProfiledPIDController(TURRET_KP, 0.0, TURRET_KD, constraints);
     double tx = 0;
-    private double shot = 0;
 
     @Override
     public void initialize() {
@@ -68,7 +67,6 @@ public class AutoShootCommand extends CommandBase {
         timer.reset();
         timer2.reset();
         pid.setTolerance(TURRET_DEGREE_TOLERANCE);
-        shot = 0;
     }
 
     @Override
@@ -91,13 +89,12 @@ public class AutoShootCommand extends CommandBase {
 
         double lookupRPM = s.getVelocity();
 
-        telemetry.addData("isWheelTripped", indexerSubsystem.isWheelSensorTripped());
-        telemetry.addData("isBeltTripped", indexerSubsystem.isBeltSensorTripped());
         telemetry.addData("velocity1", shooterSubsystem.getShooter1Velocity() /28*60);
         telemetry.addData("velocity2", shooterSubsystem.getShooter2Velocity() /28*60);
         telemetry.addData("target", lookupRPM);
+        telemetry.addData("isReadytoShoot", shooterSubsystem.isReadyToShoot(lookupRPM));
+        telemetry.addData("tolernace?", Math.abs(tx) <= TURRET_DEGREE_TOLERANCE);
         telemetry.addData("tx", tx);
-        telemetry.addData("shot", shot);
         if (!limelightSubsystem.hasValidTarget()) {
             turretSubsystem.stopTurret();
         } else {
@@ -126,14 +123,13 @@ public class AutoShootCommand extends CommandBase {
                 if (timer.seconds() > SHOOTING_TIME) {
                     shootingState = ShootingState.PREPARE;
                     timer.reset();
-                    shot += 1;
                 }
                 break;
         }
     }
 
     public boolean isFinished() {
-        return (shot > 6);
+        return (timer2.seconds() > 8);
     }
 
     public void end(boolean interrupted) {

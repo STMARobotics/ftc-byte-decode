@@ -34,6 +34,10 @@ public class IntakeSubsystem extends SubsystemBase {
         intakeMotor.setPower(INTAKE_SPEED);
     }
 
+    public void reverse() {
+        intakeMotor.setPower(-INTAKE_SPEED);
+    }
+
     public boolean isSensorTripped() {
         return (distanceSensor.getDistance(DistanceUnit.INCH) < INTAKE_SENSOR_DISTANCE);
     }
