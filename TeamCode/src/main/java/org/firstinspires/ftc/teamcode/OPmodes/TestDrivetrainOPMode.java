@@ -6,9 +6,30 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import static org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants.*;
 
+/**
+ * Testing OpMode for individually testing each drivetrain motor.
+ * <p>
+ * This OpMode allows manual testing of each drive motor using gamepad buttons:
+ * <ul>
+ *   <li>Y button: Front right motor</li>
+ *   <li>X button: Front left motor</li>
+ *   <li>B button: Back right motor</li>
+ *   <li>A button: Back left motor</li>
+ * </ul>
+ * Each motor runs at 50% power when its corresponding button is pressed.
+ * </p>
+ */
 @TeleOp(name="Test: Drive motors", group="Testing")
 public class TestDrivetrainOPMode extends LinearOpMode {
 
+    /**
+     * Main execution method for the OpMode.
+     * <p>
+     * Initializes all four drivetrain motors with appropriate directions,
+     * then continuously monitors gamepad button presses to control each
+     * motor individually for testing purposes.
+     * </p>
+     */
     @Override
     public void runOpMode() {
 

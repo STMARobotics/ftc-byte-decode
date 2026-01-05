@@ -19,12 +19,21 @@ import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.LimelightSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.ShooterSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+/**
+ * Command that autonomously aims and shoots at a target using vision tracking.
+ * <p>
+ * This command coordinates multiple subsystems to:
+ * <ul>
+ *   <li>Track targets using the Limelight vision system</li>
+ *   <li>Aim the turret using a profiled PID controller</li>
+ *   <li>Spin up the shooter to the appropriate velocity based on distance</li>
+ *   <li>Manage the indexer and intake to feed balls into the shooter</li>
+ * </ul>
+ * The command runs for 8 seconds before automatically finishing.
+ */
 public class AutoShootCommand extends CommandBase {
 
-    private static final Logger log = LoggerFactory.getLogger(AutoShootCommand.class);
     private final IndexerSubsystem indexerSubsystem;
     private final LimelightSubsystem limelightSubsystem;
     private final TurretSubsystem turretSubsystem;
@@ -32,6 +41,16 @@ public class AutoShootCommand extends CommandBase {
     private final IntakeSubsystem intakeSubsystem;
     private final Telemetry telemetry;
 
+    /**
+     * Constructs an AutoShootCommand with all required subsystems.
+     *
+     * @param indexerSubsystem   the indexer subsystem for feeding balls
+     * @param limelightSubsystem the limelight subsystem for vision tracking
+     * @param turretSubsystem    the turret subsystem for aiming
+     * @param shooterSubsystem   the shooter subsystem for launching balls
+     * @param intakeSubsystem    the intake subsystem for collecting balls
+     * @param telemetry          the telemetry object for logging data
+     */
     public AutoShootCommand(IndexerSubsystem indexerSubsystem,
                             LimelightSubsystem limelightSubsystem,
                             TurretSubsystem turretSubsystem,
@@ -48,10 +67,14 @@ public class AutoShootCommand extends CommandBase {
         addRequirements(indexerSubsystem, turretSubsystem, limelightSubsystem, shooterSubsystem, intakeSubsystem);
     }
 
+    /**
+     * Represents the current state of the shooting sequence.
+     */
     enum ShootingState {
+        /** Preparing to shoot - spinning up flywheel and aiming */
         PREPARE,
-        SHOOT,
-        END
+        /** Actively shooting - feeding balls into the shooter */
+        SHOOT
     }
 
     private ShootingState shootingState;
@@ -61,6 +84,9 @@ public class AutoShootCommand extends CommandBase {
     private final ProfiledPIDController pid = new ProfiledPIDController(TURRET_KP, 0.0, TURRET_KD, constraints);
     double tx = 0;
 
+    /**
+     * Initializes the command by resetting timers and setting the initial state.
+     */
     @Override
     public void initialize() {
         shootingState = ShootingState.PREPARE;
@@ -69,6 +95,16 @@ public class AutoShootCommand extends CommandBase {
         pid.setTolerance(TURRET_DEGREE_TOLERANCE);
     }
 
+    /**
+     * Executes the shooting sequence by:
+     * <ol>
+     *   <li>Managing the indexer belt based on sensor states</li>
+     *   <li>Controlling the intake based on ball position sensors</li>
+     *   <li>Calculating shooter velocity from distance using lookup table</li>
+     *   <li>Aiming the turret using PID control based on Limelight data</li>
+     *   <li>Transitioning between PREPARE and SHOOT states when ready</li>
+     * </ol>
+     */
     @Override
     public void execute() {
         if (indexerSubsystem.isBeltSensorTripped() && indexerSubsystem.isWheelSensorTripped()) {
@@ -128,10 +164,20 @@ public class AutoShootCommand extends CommandBase {
         }
     }
 
+    /**
+     * Determines if the command has finished executing.
+     *
+     * @return {@code true} if the command has run for more than 8 seconds, {@code false} otherwise
+     */
     public boolean isFinished() {
         return (timer2.seconds() > 8);
     }
 
+    /**
+     * Stops all subsystems when the command ends.
+     *
+     * @param interrupted {@code true} if the command was interrupted, {@code false} if it ended normally
+     */
     public void end(boolean interrupted) {
         turretSubsystem.stopTurret();
         indexerSubsystem.stopWheel();

@@ -23,11 +23,42 @@ import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 
 import java.util.List;
 
+/**
+ * TeleOp OpMode for the red alliance.
+ * <p>
+ * This OpMode provides driver-controlled operation with the following features:
+ * <ul>
+ *   <li>Field-centric or robot-centric driving using gamepad joysticks</li>
+ *   <li>AprilTag detection using the Limelight vision system</li>
+ *   <li>Trigger-activated shooting with automatic turret aiming</li>
+ *   <li>Trigger-activated intake and indexer control</li>
+ * </ul>
+ * </p>
+ */
 @TeleOp
 public class RedTeleOPMode extends CommandOpMode {
 
     private int newTagId = 0;
 
+    /**
+     * Initializes the TeleOp routine.
+     * <p>
+     * This method performs the following setup operations:
+     * <ul>
+     *   <li>Creates and configures all robot subsystems</li>
+     *   <li>Starts the Limelight and detects AprilTags</li>
+     *   <li>Registers all subsystems with the command scheduler</li>
+     *   <li>Configures gamepad button bindings:
+     *     <ul>
+     *       <li>Right trigger: Toggle shooting mode</li>
+     *       <li>Left trigger: Toggle intake</li>
+     *       <li>Back button: Reset localization</li>
+     *     </ul>
+     *   </li>
+     *   <li>Sets the default drive command for joystick control</li>
+     * </ul>
+     * </p>
+     */
     @Override
     public void initialize() {
         int lastTagId = 0;
