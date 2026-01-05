@@ -75,7 +75,9 @@ public class ShootCommand extends CommandBase {
         /** Preparing to shoot - spinning up flywheel and aiming */
         PREPARE,
         /** Actively shooting - feeding balls into the shooter */
-        SHOOT
+        SHOOT,
+        /** Shooting sequence complete */
+        END
     }
 
     private ShootingState shootingState;
@@ -143,7 +145,6 @@ public class ShootCommand extends CommandBase {
 
                 turretSubsystem.setTurretPower(pidOutput);
             } catch (NullPointerException error) {
-                log.error("e: ", error);
             }
         }
 

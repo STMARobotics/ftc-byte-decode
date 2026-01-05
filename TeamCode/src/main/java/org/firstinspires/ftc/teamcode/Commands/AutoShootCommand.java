@@ -74,7 +74,7 @@ public class AutoShootCommand extends CommandBase {
         /** Preparing to shoot - spinning up flywheel and aiming */
         PREPARE,
         /** Actively shooting - feeding balls into the shooter */
-        SHOOT
+        SHOOT,
     }
 
     private ShootingState shootingState;
@@ -142,7 +142,6 @@ public class AutoShootCommand extends CommandBase {
 
                 turretSubsystem.setTurretPower(pidOutput);
             } catch (NullPointerException error) {
-                log.error("e: ", error);
             }
         }
 
