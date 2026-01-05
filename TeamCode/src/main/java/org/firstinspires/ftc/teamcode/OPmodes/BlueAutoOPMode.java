@@ -18,18 +18,42 @@ import org.firstinspires.ftc.teamcode.Commands.IntakeCommand;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveTrainSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.IndexerSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
-//import org.firstinspires.ftc.teamcode.Subsystems.LimelightSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.LimelightSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.ShooterSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 
 import java.util.List;
 
+/**
+ * Autonomous OpMode for the blue alliance.
+ * <p>
+ * This OpMode executes a predefined autonomous routine that includes:
+ * <ul>
+ *   <li>Detecting AprilTags using the Limelight vision system</li>
+ *   <li>Following a sequence of paths using Bezier curves</li>
+ *   <li>Intaking game elements while driving</li>
+ *   <li>Automatically shooting at detected targets</li>
+ * </ul>
+ * </p>
+ */
 @Autonomous
 public class BlueAutoOPMode extends CommandOpMode {
 
     private int newTagId = 0;
 
+    /**
+     * Initializes the autonomous routine.
+     * <p>
+     * This method performs the following setup operations:
+     * <ul>
+     *   <li>Creates and configures all robot subsystems</li>
+     *   <li>Starts the Limelight
+     *   <li>Builds path chains for the robot to follow</li>
+     *   <li>Registers all subsystems with the command scheduler</li>
+     *   <li>Schedules the autonomous command sequence</li>
+     * </ul>
+     * </p>
+     */
     @Override
     public void initialize() {
         int lastTagId = 0;
